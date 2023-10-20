@@ -1,5 +1,6 @@
 package com.mdgspace.activityleaderboard.payload.response;
 
+// Class to serialize message
 public class MessageResponse {
     
     private String message;

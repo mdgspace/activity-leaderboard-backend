@@ -8,7 +8,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 
-// User Model
+// User Model for user with non-admin access.
+
 @Entity
 @Table(name="users",
        uniqueConstraints = {
@@ -16,31 +17,42 @@ import java.util.Set;
         @UniqueConstraint(columnNames = "accesstoken")
        })
 public class User {
+
+   // Primary key to identify the user.
     @Id 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    // Username, will be same to the github handle
     @NotBlank 
     @Size(max=20)
     private String username;
 
+    // TODO: Reimplement using proper method
     @NotBlank 
     @Size(max=20)
     private String password;
 
+
+    // github_oauth access token
     @NotBlank
     @Size(max=20)
     private String accesstoken;
  
+
+   // Constructor for dependency injection 
    public User(){
 
    }
+
 
    public User(String username, String accesstoken, String password){
     this.username=username;
     this.accesstoken=accesstoken;
     this.password=password;
    }
+
+   // Defining getters and setters
 
    public Long getId(){
     return id;

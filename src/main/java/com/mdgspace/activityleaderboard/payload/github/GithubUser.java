@@ -2,6 +2,7 @@ package com.mdgspace.activityleaderboard.payload.github;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+//  For deserializing githubapi/user response
 public class GithubUser {
     
     @JsonProperty("login")
@@ -10,7 +11,7 @@ public class GithubUser {
     public GithubUser(){
 
     }
-
+//  Getters and setters
     public String getUsername(){
         return username;
     }

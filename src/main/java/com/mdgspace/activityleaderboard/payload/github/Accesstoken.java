@@ -1,6 +1,8 @@
 package com.mdgspace.activityleaderboard.payload.github;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+
+//  For deserializing access_token github response
 public class Accesstoken {
 
     @JsonProperty("access_token")
@@ -13,6 +15,7 @@ public class Accesstoken {
      
     }
 
+    //  Getters and setters
     public String getAccesstoken(){
         return access_token;
     }
@@ -29,6 +32,7 @@ public class Accesstoken {
         this.token_type=type;
     }
 
+    // For testing purpose
     @Override
     public String toString(){
         return "Accesstoken: "+access_token+" ,type: " +token_type;
