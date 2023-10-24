@@ -34,6 +34,10 @@ public class OrgRole {
     @Enumerated(EnumType.STRING)
     private EOrgRole role;
 
+    private Boolean bookmarked = false;
+
+    private Boolean archeive= false;
+
     public OrgRole(){
 
     }
@@ -59,6 +63,14 @@ public class OrgRole {
         return user;
     }
 
+    public Boolean getBookmarked(){
+        return bookmarked;
+    }
+
+    public Boolean getArcheive(){
+        return archeive;
+    }
+
     public void setId(OrgRoleKey id){
         this.id=id;
     }
@@ -76,6 +88,13 @@ public class OrgRole {
     }
 
 
+    public void setBookmarked(Boolean bookmarked){
+        this.bookmarked=bookmarked;
+    }
+
+    public void setArcheive(Boolean archeive){
+        this.archeive=archeive;
+    }
 
 
 
