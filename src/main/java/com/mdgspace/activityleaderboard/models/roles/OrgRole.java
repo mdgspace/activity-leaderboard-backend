@@ -3,7 +3,6 @@ package com.mdgspace.activityleaderboard.models.roles;
 import com.mdgspace.activityleaderboard.models.Organization;
 import com.mdgspace.activityleaderboard.models.User;
 import com.mdgspace.activityleaderboard.models.enums.EOrgRole;
-import com.mdgspace.activityleaderboard.models.enums.EProjectRole;
 import com.mdgspace.activityleaderboard.models.keys.OrgRoleKey;
 
 import jakarta.persistence.EmbeddedId;

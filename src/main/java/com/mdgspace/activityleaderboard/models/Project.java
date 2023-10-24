@@ -6,7 +6,7 @@ import java.util.HashSet;
 
 import java.util.Set;
 
-import com.mdgspace.activityleaderboard.models.roles.OrgRole;
+
 import com.mdgspace.activityleaderboard.models.roles.ProjectRole;
 
 import jakarta.persistence.*;
@@ -50,7 +50,7 @@ public class Project {
     @OneToMany(mappedBy = "project")
     private Set<ProjectRole> projectRoles=new HashSet<>();
 
-    
+
 
     public Project(){
 

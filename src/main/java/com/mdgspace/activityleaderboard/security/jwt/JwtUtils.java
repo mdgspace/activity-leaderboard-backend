@@ -3,23 +3,18 @@ package com.mdgspace.activityleaderboard.security.jwt;
 import java.security.Key;
 import java.util.Date;
 
-import javax.swing.Spring;
-
-import java.io.*;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
-import com.mdgspace.activityleaderboard.security.services.UserDetailsServiceImpl;
 import com.mdgspace.activityleaderboard.security.services.UserDetailsImpl;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
-import jakarta.annotation.PostConstruct;
+
 
 @Component
 public class JwtUtils {
