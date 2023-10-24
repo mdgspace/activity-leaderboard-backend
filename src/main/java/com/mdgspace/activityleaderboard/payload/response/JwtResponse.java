@@ -16,7 +16,7 @@ public class JwtResponse {
     // Username of user
     private String username;
 
-    public JwtResponse(String token, Long id, String username, String email){
+    public JwtResponse(String token, Long id, String username){
         this.token=token;
         this.id= id;
         this.username=username;

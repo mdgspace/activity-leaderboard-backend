@@ -137,6 +137,7 @@ public class AuthControler {
             }
             
             //  Steps to create the token
+            
             Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username,username ,null));
             
             SecurityContextHolder.getContext().setAuthentication(authentication);
@@ -146,7 +147,7 @@ public class AuthControler {
             String jwt = jwtUtils.generateJwtToken(authentication);
 
             // Response sent to frontend
-            return ResponseEntity.ok(new JwtResponse(userDetails.getAccesstoken(), userDetails.getId(), userDetails.getUsername(), jwt));
+            return ResponseEntity.ok(new JwtResponse(jwt, userDetails.getId(), userDetails.getUsername()));
 
         } catch (Exception e) {
 

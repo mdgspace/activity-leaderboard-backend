@@ -1,6 +1,5 @@
 package com.mdgspace.activityleaderboard.payload.request;
 
-import java.util.Set;
 import jakarta.validation.constraints.*;
 
 // This class is used by spring boot to deserialize user login request
@@ -15,7 +14,7 @@ public class LoginRequest {
         return code;
     }
 
-    public void setCode(){
+    public void setCode(String code){
         this.code=code;
     }
 }

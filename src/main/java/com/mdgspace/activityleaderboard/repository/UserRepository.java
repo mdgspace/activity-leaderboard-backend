@@ -11,6 +11,6 @@ import com.mdgspace.activityleaderboard.models.User;
 public interface UserRepository extends JpaRepository<User,Long>{
     
     Optional<User> findByUsername(String Username);
-
+    
     Boolean existsByUsername(String username);
 }

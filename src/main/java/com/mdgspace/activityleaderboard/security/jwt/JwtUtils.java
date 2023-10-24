@@ -27,7 +27,7 @@ public class JwtUtils {
     private static final Logger logger = LoggerFactory.getLogger(JwtUtils.class);
 
     private String jwtSecret="===============================mdgspace==========================";
-     private int jwtExpirationMs=156548;
+     private int jwtExpirationMs=28800000;
 
 
   
@@ -52,11 +52,12 @@ public class JwtUtils {
     public boolean validateJwtToken(String authtoken) {
         try {
 
+            System.out.println(authtoken+"....................");
             Jwts.parserBuilder().setSigningKey(key()).build().parse(authtoken);
             return true;
 
         } catch (MalformedJwtException e) {
-
+            System.out.println(e);
             logger.error("Invalid JWT token: {}", e.getMessage());
 
         } catch (ExpiredJwtException e) {
