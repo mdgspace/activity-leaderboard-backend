@@ -16,10 +16,13 @@ import jakarta.validation.constraints.Size;
 
 import java.util.Set;
 
+
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.mdgspace.activityleaderboard.models.roles.OrgRole;
 
 import java.util.HashSet;
+
 
 @Entity
 @Table(name="organizations", uniqueConstraints = {
@@ -35,24 +38,22 @@ public class Organization {
     @Size(max=20)
     private String name;
 
-    @NotBlank
     @Size(max = 40)
     private String description;
 
 
-    @NotBlank
     @Size(max= 30)
     private String icon;
 
     @JsonIgnore
-    @OneToMany
+    @OneToMany()
     @JoinColumn(name="project_id")
     private Set<Project> projects;
 
     @JsonIgnore
     @OneToMany(mappedBy = "organization")
     private Set<OrgRole> orgRoles=new HashSet<>();
-
+ 
     public Organization(){
 
     }

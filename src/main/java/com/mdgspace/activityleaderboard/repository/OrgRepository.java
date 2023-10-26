@@ -10,8 +10,8 @@ import com.mdgspace.activityleaderboard.models.Organization;
 @Repository
 public interface OrgRepository extends JpaRepository<Organization,Long> {
     
-    Optional<Organization> findByOrgname(String orgName);
+    Optional<Organization> findByName(String orgName);
 
-    Boolean existsByOrgname(String orgName);
+    Boolean existsByName(String orgName);
     
 }

@@ -11,8 +11,10 @@ import com.mdgspace.activityleaderboard.models.Project;
 @Repository
 public interface ProjectRepository extends JpaRepository<Project, Long> {
 
-    Optional<Project> findByProjectname(String projectName);
+    Optional<Project> findByName(String projectName);
 
-    Boolean existsByProjectname(String projectName);
+    Boolean existsByName(String projectName);
+
+    Boolean existsByLink(String link);
 
 }

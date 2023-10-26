@@ -16,7 +16,6 @@ import jakarta.validation.constraints.Size;
 
 @Entity
 @Table(name="projects",uniqueConstraints = {
-    @UniqueConstraint(columnNames = "name"),
     @UniqueConstraint(columnNames = "link")
 })
 public class Project {
@@ -25,6 +24,7 @@ public class Project {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name="name")
     @NotBlank
     @Size(max=10)
     private String name;
@@ -60,6 +60,7 @@ public class Project {
         this.name = name;
         this.description = description;
         this.link = link;
+        this.organization=organization;
     }
 
     
@@ -114,6 +115,8 @@ public class Project {
    public void setProjectRoles(Set<ProjectRole> projectRoles){
     this.projectRoles=projectRoles;
    }
+
+
    
 
 

@@ -3,6 +3,7 @@ package com.mdgspace.activityleaderboard.controllers;
 import jakarta.validation.Valid;
 
 import java.util.Optional;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,12 +23,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import com.mdgspace.activityleaderboard.models.Organization;
 import com.mdgspace.activityleaderboard.models.User;
+import com.mdgspace.activityleaderboard.models.enums.EOrgRole;
+import com.mdgspace.activityleaderboard.models.keys.OrgRoleKey;
+import com.mdgspace.activityleaderboard.models.roles.OrgRole;
 import com.mdgspace.activityleaderboard.payload.github.Accesstoken;
 import com.mdgspace.activityleaderboard.payload.github.GithubUser;
 import com.mdgspace.activityleaderboard.payload.request.LoginRequest;
 import com.mdgspace.activityleaderboard.payload.response.JwtResponse;
 import com.mdgspace.activityleaderboard.payload.response.MessageResponse;
+import com.mdgspace.activityleaderboard.repository.OrgRepository;
+import com.mdgspace.activityleaderboard.repository.OrgRoleRepository;
 import com.mdgspace.activityleaderboard.repository.UserRepository;
 import com.mdgspace.activityleaderboard.security.jwt.AuthEntryPointJwt;
 import com.mdgspace.activityleaderboard.security.jwt.JwtUtils;
@@ -61,6 +68,12 @@ public class AuthControler {
     // for making the JWT token
     @Autowired
     JwtUtils jwtUtils;
+
+    @Autowired
+    OrgRepository orgRepository;
+
+    @Autowired
+    OrgRoleRepository orgRoleRepository;
 
     // Below env variable are defined, checkout setup
 
@@ -127,9 +140,33 @@ public class AuthControler {
             if(!isUser){
                 // Crete new user object
                 User new_user= new User(username, access_token,encoder.encode(username));
-                
-                // Saving in database
+
                 userRepository.save(new_user);
+                // Saving in database
+           
+                String orgName=username+"-space";
+
+                Organization new_org= new Organization(orgName, null, null);
+                orgRepository.save(new_org);
+
+                OrgRoleKey id= new OrgRoleKey(new_org.getId(), new_user.getId());
+                System.out.println(id.getOrgnaizationId()+"//////"+id.getUserId()+";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;");
+                EOrgRole eOrgRole= EOrgRole.ADMIN;
+                OrgRole new_org_role= new OrgRole(eOrgRole,id);
+                System.out.println(new_org_role+";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;");
+                orgRoleRepository.save(new_org_role);
+                System.out.println(new_org_role+";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;");
+                Set<OrgRole> org_roles=new_org.getOrgRoles();
+                org_roles.add(new_org_role);
+                // new_org.setOrgRoles(org_roles);
+                Set<OrgRole> user_roles=new_user.getOrgRoles();
+                user_roles.add(new_org_role);
+                // new_user.setOrgRoles(user_roles);
+                System.out.println(user_roles);
+                System.out.println(org_roles);
+                System.out.println(";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;");
+
+
             }
             if(isUser){           
                 // Setting access token in database

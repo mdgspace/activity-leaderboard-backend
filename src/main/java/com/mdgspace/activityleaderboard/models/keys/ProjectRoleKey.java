@@ -3,7 +3,10 @@ package com.mdgspace.activityleaderboard.models.keys;
 import java.io.Serializable;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.Embeddable;
 
+
+@Embeddable
 public class ProjectRoleKey implements Serializable {
     
     @Column(name="project_id")
@@ -19,6 +22,8 @@ public class ProjectRoleKey implements Serializable {
        this.projectId= projectId;
        this.userId=userId;
     }
+
+    
     public Long getProjectId(){
         return projectId;
     }

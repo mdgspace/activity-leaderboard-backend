@@ -3,7 +3,9 @@ package com.mdgspace.activityleaderboard.models.keys;
 import java.io.Serializable;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.Embeddable;
 
+@Embeddable
 public class OrgRoleKey implements Serializable {
  
     @Column(name="organoization_id")

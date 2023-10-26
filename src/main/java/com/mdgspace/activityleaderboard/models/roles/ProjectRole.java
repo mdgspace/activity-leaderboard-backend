@@ -36,8 +36,9 @@ public class ProjectRole {
 
     }
 
-    public ProjectRole(EProjectRole role){
+    public ProjectRole(EProjectRole role,ProjectRoleKey id){
         this.role=role;
+        this.id=id;
     }
 
     public EProjectRole getRole(){
@@ -56,6 +57,9 @@ public class ProjectRole {
         return user;
     }
 
+    public void setId(ProjectRoleKey id){
+        this.id=id;
+    }
     public void setUser(User user){
         this.user=user;
     }

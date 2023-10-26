@@ -41,10 +41,12 @@ public class OrgRole {
 
     }
 
-    public OrgRole(EOrgRole role){
+    public OrgRole(EOrgRole role,OrgRoleKey id){
         this.role=role;
+        this.id=id;
     }
-
+    
+    
 
     public EOrgRole getRole(){
         return role;
