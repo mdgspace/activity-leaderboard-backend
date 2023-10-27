@@ -3,12 +3,15 @@ package com.mdgspace.activityleaderboard.models.roles;
 import com.mdgspace.activityleaderboard.models.Project;
 import com.mdgspace.activityleaderboard.models.User;
 import com.mdgspace.activityleaderboard.models.enums.EProjectRole;
-import com.mdgspace.activityleaderboard.models.keys.ProjectRoleKey;
 
-import jakarta.persistence.EmbeddedId;
+
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.MapsId;
@@ -16,16 +19,15 @@ import jakarta.persistence.MapsId;
 @Entity
 public class ProjectRole {
     
-    @EmbeddedId
-    private ProjectRoleKey id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @ManyToOne
-    @MapsId("projectId")
     @JoinColumn(name="project_id")
     private  Project project;
 
     @ManyToOne
-    @MapsId("userId")
     @JoinColumn(name="user_id")
     private User user;
 
@@ -36,16 +38,18 @@ public class ProjectRole {
 
     }
 
-    public ProjectRole(EProjectRole role,ProjectRoleKey id){
+    public ProjectRole(EProjectRole role,Project project,User user){
         this.role=role;
-        this.id=id;
+        this.project=project;
+        this.user=user;
+       
     }
 
     public EProjectRole getRole(){
         return role;
     }
 
-    public ProjectRoleKey getId(){
+    public Long getId(){
         return id;
     }
 
@@ -57,7 +61,7 @@ public class ProjectRole {
         return user;
     }
 
-    public void setId(ProjectRoleKey id){
+    public void setId(Long id){
         this.id=id;
     }
     public void setUser(User user){

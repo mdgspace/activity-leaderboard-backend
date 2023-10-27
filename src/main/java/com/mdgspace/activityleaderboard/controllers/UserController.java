@@ -31,7 +31,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 @RequestMapping("/api/protected/user")
 public class UserController {
-     private static final Logger logger = LoggerFactory.getLogger(AuthEntryPointJwt.class);
+     private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
      @Autowired
      UserRepository userRepository;

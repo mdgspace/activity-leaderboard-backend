@@ -26,7 +26,6 @@ import org.springframework.web.reactive.function.client.WebClient;
 import com.mdgspace.activityleaderboard.models.Organization;
 import com.mdgspace.activityleaderboard.models.User;
 import com.mdgspace.activityleaderboard.models.enums.EOrgRole;
-import com.mdgspace.activityleaderboard.models.keys.OrgRoleKey;
 import com.mdgspace.activityleaderboard.models.roles.OrgRole;
 import com.mdgspace.activityleaderboard.payload.github.Accesstoken;
 import com.mdgspace.activityleaderboard.payload.github.GithubUser;
@@ -144,28 +143,19 @@ public class AuthControler {
                 userRepository.save(new_user);
                 // Saving in database
            
-                String orgName=username+"-space";
-
+                String orgName=username+"/userspace";
+                Boolean isOrg= orgRepository.existsByName(orgName);
+                if(isOrg){
+                   return  ResponseEntity.internalServerError().body("Internal server error");
+                }
                 Organization new_org= new Organization(orgName, null, null);
                 orgRepository.save(new_org);
-
-                OrgRoleKey id= new OrgRoleKey(new_org.getId(), new_user.getId());
-                System.out.println(id.getOrgnaizationId()+"//////"+id.getUserId()+";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;");
                 EOrgRole eOrgRole= EOrgRole.ADMIN;
-                OrgRole new_org_role= new OrgRole(eOrgRole,id);
-                System.out.println(new_org_role+";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;");
+                OrgRole new_org_role= new OrgRole(eOrgRole,new_org,new_user);
                 orgRoleRepository.save(new_org_role);
-                System.out.println(new_org_role+";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;");
-                Set<OrgRole> org_roles=new_org.getOrgRoles();
-                org_roles.add(new_org_role);
-                // new_org.setOrgRoles(org_roles);
-                Set<OrgRole> user_roles=new_user.getOrgRoles();
-                user_roles.add(new_org_role);
-                // new_user.setOrgRoles(user_roles);
-                System.out.println(user_roles);
-                System.out.println(org_roles);
-                System.out.println(";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;");
 
+              
+               
 
             }
             if(isUser){           

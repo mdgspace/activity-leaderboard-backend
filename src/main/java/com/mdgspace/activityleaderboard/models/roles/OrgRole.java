@@ -3,30 +3,32 @@ package com.mdgspace.activityleaderboard.models.roles;
 import com.mdgspace.activityleaderboard.models.Organization;
 import com.mdgspace.activityleaderboard.models.User;
 import com.mdgspace.activityleaderboard.models.enums.EOrgRole;
-import com.mdgspace.activityleaderboard.models.keys.OrgRoleKey;
 
-import jakarta.persistence.EmbeddedId;
+
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.MapsId;
+
 
 @Entity
 public class OrgRole {
 
-    @EmbeddedId
-    private OrgRoleKey id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @ManyToOne
-    @MapsId("organizationId")
     @JoinColumn(name="organization_id")
     private Organization organization;
 
 
     @ManyToOne
-    @MapsId("userId")
     @JoinColumn(name="user_id")
     private User user;
 
@@ -41,18 +43,19 @@ public class OrgRole {
 
     }
 
-    public OrgRole(EOrgRole role,OrgRoleKey id){
+    public OrgRole(EOrgRole role,Organization organization, User user){
         this.role=role;
-        this.id=id;
+        this.organization=organization;
+        this.user=user;
     }
     
-    
+
 
     public EOrgRole getRole(){
         return role;
     }
 
-    public OrgRoleKey getId(){
+    public Long getId(){
         return id;
     }
 
@@ -72,7 +75,7 @@ public class OrgRole {
         return archeive;
     }
 
-    public void setId(OrgRoleKey id){
+    public void setId(Long id){
         this.id=id;
     }
 

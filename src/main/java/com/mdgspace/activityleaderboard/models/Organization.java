@@ -46,9 +46,8 @@ public class Organization {
     private String icon;
 
     @JsonIgnore
-    @OneToMany()
-    @JoinColumn(name="project_id")
-    private Set<Project> projects;
+    @OneToMany(mappedBy = "organization")
+    private Set<Project> projects=new HashSet<>();
 
     @JsonIgnore
     @OneToMany(mappedBy = "organization")

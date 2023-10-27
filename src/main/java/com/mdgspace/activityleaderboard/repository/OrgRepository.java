@@ -13,5 +13,6 @@ public interface OrgRepository extends JpaRepository<Organization,Long> {
     Optional<Organization> findByName(String orgName);
 
     Boolean existsByName(String orgName);
+
     
 }
