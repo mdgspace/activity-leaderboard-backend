@@ -2,30 +2,41 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
+	<modelVersion>4.0.0</modelVersion> <!-- Maven POM file version -->
+	<!-- Parent POM providing dependency and plugin management -->
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
 		<version>3.1.4</version>
-		<relativePath /> <!-- lookup parent from repository -->
+		<relativePath /> <!-- This is used to look up the parent from the repository -->
 	</parent>
+
+	<!-- Maven Coordinates to uniquely identify this project -->
 	<groupId>com.mdgspace</groupId>
 	<artifactId>activityleaderboard</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>activityleaderboard</name>
 	<description>Demo project for Spring Boot</description>
+
+	<!-- Project properties to set versions for plugins and dependencies -->
 	<properties>
 		<java.version>17</java.version>
 	</properties>
+
+	<!-- List of dependencies required by this project -->
 	<dependencies>
+		<!-- OAuth 2.0 Client for Spring Boot -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-oauth2-client</artifactId>
 		</dependency>
+
+		<!-- Starter for building web, including RESTful, applications using Spring MVC -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-devtools</artifactId>
@@ -35,46 +46,66 @@
 			<artifactId>jackson-core</artifactId>
 			<version>2.13.3</version>
 		</dependency>
+
+
+		<!-- Starter for testing Spring Boot applications with libraries including JUnit, Hamcrest, and Mockito -->
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+
+		<!-- Starter for using Spring Data JPA with Hibernate -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
 		</dependency>
+
+		<!-- Starter for using Spring Security -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-security</artifactId>
 		</dependency>
+
+		<!-- JSON Web Token support for Java -->
 		<dependency>
 			<groupId>io.jsonwebtoken</groupId>
 			<artifactId>jjwt-api</artifactId>
 			<version>0.11.5</version>
 		</dependency>
+
+		<!-- Runtime implementation of JSON Web Token for Java -->
 		<dependency>
 			<groupId>io.jsonwebtoken</groupId>
 			<artifactId>jjwt-impl</artifactId>
 			<version>0.11.5</version>
-			<scope>runtime</scope>
+			<scope>runtime</scope> <!-- This dependency is only required at runtime -->
 		</dependency>
+
+		<!-- Jakarta Bean Validation API -->
 		<dependency>
 			<groupId>jakarta.validation</groupId>
 			<artifactId>jakarta.validation-api</artifactId>
 			<version>3.0.2</version>
 		</dependency>
+
+		<!-- JSON processor for Java -->
 		<dependency>
 			<groupId>io.jsonwebtoken</groupId>
 			<artifactId>jjwt-jackson</artifactId>
 			<version>0.11.5</version>
-			<scope>runtime</scope>
+			<scope>runtime</scope> <!-- This dependency is only required at runtime -->
 		</dependency>
+
+		<!-- PostgreSQL Database Connector -->
 		<dependency>
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
 			<scope>runtime</scope>
 		</dependency>
+
+		<!-- Starter for building WebFlux applications using Spring Framework’s Reactive Web support -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-webflux</artifactId>
@@ -82,8 +113,10 @@
 
 	</dependencies>
 
+	<!-- Configuration for Maven build and plugins -->
 	<build>
 		<plugins>
+			<!-- Spring Boot’s Maven plugin for building and packaging this application -->
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
