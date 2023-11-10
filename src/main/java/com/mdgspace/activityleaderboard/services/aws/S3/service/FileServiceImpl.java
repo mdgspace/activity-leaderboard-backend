@@ -88,11 +88,13 @@ public class FileServiceImpl implements FileService{
             }
 
             Path pathObject=Paths.get(fileName);
+            
 
             Resource resource= new UrlResource(pathObject.toUri());
-
+  
             if(resource.exists()||resource.isReadable()){
                 return resource;
+                
             }else{
                 throw new FileDownloadException("Could not find the file!");
 

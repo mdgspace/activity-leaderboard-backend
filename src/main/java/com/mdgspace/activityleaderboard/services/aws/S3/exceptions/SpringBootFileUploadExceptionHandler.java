@@ -25,64 +25,63 @@ import reactor.core.publisher.Mono;
 public class SpringBootFileUploadExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(value = { FileEmptyException.class })
-    protected Mono<ResponseEntity<Object>> handleFileEmptyException(FileEmptyException ex, ServerWebExchange request) {
+    protected ResponseEntity<?> handleFileEmptyException(FileEmptyException ex) {
         String bodyOfResponse = ex.getMessage();
-        return handleExceptionInternal(ex, bodyOfResponse, new HttpHeaders(), HttpStatus.NO_CONTENT, request);
+        return new ResponseEntity<>(bodyOfResponse,HttpStatus.NO_CONTENT);
     }
 
     @ExceptionHandler(value = { FileDownloadException.class })
-    protected Mono<ResponseEntity<Object>> handleFileDownloadException(FileDownloadException ex,
-            ServerWebExchange request) {
+    protected ResponseEntity<?> handleFileDownloadException(FileDownloadException ex) {
         String bodyOfResponse = ex.getMessage();
-        return handleExceptionInternal(ex, bodyOfResponse, new HttpHeaders(), HttpStatus.NOT_FOUND, request);
+         return new ResponseEntity<>(bodyOfResponse,HttpStatus.BAD_REQUEST);
     }
 
      @ExceptionHandler(value = { SpringBootFileUploadException.class })
-    protected Mono<ResponseEntity<Object>> handleConflict(SpringBootFileUploadException ex,
+    protected ResponseEntity<?> handleConflict(SpringBootFileUploadException ex,
             ServerWebExchange request) {
         String bodyOfResponse = ex.getMessage();
-        return handleExceptionInternal(ex, bodyOfResponse, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
+        return new ResponseEntity<>(bodyOfResponse,HttpStatus.BAD_REQUEST);
     }
 
     // Handle exceptions that occur when the call was transmitted successfully, but Amazon S3 couldn't process 
     // It, so it returned an error response
 
     @ExceptionHandler(value = {AmazonServiceException.class})
-    protected Mono<ResponseEntity<Object>> handleAmazonServiceException(
-        RuntimeException ex, ServerWebExchange request
+    protected ResponseEntity<?> handleAmazonServiceException(
+        RuntimeException ex
     ){
       String bodyOfResponse= ex.getMessage();
-      return handleExceptionInternal(ex, bodyOfResponse, new HttpHeaders(), HttpStatus.CONFLICT, request);  
+        return new ResponseEntity<>(bodyOfResponse, HttpStatus.CONFLICT);
     }
 
     // Handle exceptions that occur when Amazon S3 couldn't be contacted for a response, or the client
     //  couldnt parse the response from Amazon s3
 
      @ExceptionHandler(value = {SdkClientException.class})
-    protected Mono<ResponseEntity<Object>> handleClientException(
-        RuntimeException ex, ServerWebExchange request
+    protected ResponseEntity<?> handleClientException(
+        RuntimeException ex
     ){
       String bodyOfResponse= ex.getMessage();
-      return handleExceptionInternal(ex, bodyOfResponse, new HttpHeaders(), HttpStatus.SERVICE_UNAVAILABLE, request);  
+      return new ResponseEntity<>(bodyOfResponse,HttpStatus.SERVICE_UNAVAILABLE);  
     }
 
      @ExceptionHandler(value = {IOException.class, FileNotFoundException.class, MultipartException.class})
-    protected Mono<ResponseEntity<Object>> handleIOException(
-        RuntimeException ex, ServerWebExchange request
+    protected ResponseEntity<?> handleIOException(
+        RuntimeException ex
     ){
       String bodyOfResponse= ex.getMessage();
-      return handleExceptionInternal(ex, bodyOfResponse, new HttpHeaders(), HttpStatus.SERVICE_UNAVAILABLE, request);  
+      return new ResponseEntity<>(bodyOfResponse,HttpStatus.SERVICE_UNAVAILABLE); 
     }
 
       @ExceptionHandler(value = {Exception.class})
-    protected Mono<ResponseEntity<Object>> handleUnExpectedException(
-        RuntimeException ex, ServerWebExchange request
+    protected ResponseEntity<?> handleUnExpectedException(
+        RuntimeException ex
     ){
       String bodyOfResponse= ex.getMessage();
       log.info("Exception ==> ", ex);
        log.info("Fatal exception ===> {}", bodyOfResponse);
 
-      return handleExceptionInternal(ex, bodyOfResponse, new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR, request);  
+      return new ResponseEntity<>(bodyOfResponse,HttpStatus.INTERNAL_SERVER_ERROR);  
     }
 
 
