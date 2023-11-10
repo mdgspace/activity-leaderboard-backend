@@ -3,6 +3,7 @@
 /home/yash/activity-leaderboard-stuffs/activity-leaderboard-backend/src/main/java/com/mdgspace/activityleaderboard/payload/github/GithubUser.java
 /home/yash/activity-leaderboard-stuffs/activity-leaderboard-backend/src/main/java/com/mdgspace/activityleaderboard/payload/response/MessageResponse.java
 /home/yash/activity-leaderboard-stuffs/activity-leaderboard-backend/src/main/java/com/mdgspace/activityleaderboard/payload/response/JwtResponse.java
+/home/yash/activity-leaderboard-stuffs/activity-leaderboard-backend/src/main/java/com/mdgspace/activityleaderboard/services/aws/S3.java
 /home/yash/activity-leaderboard-stuffs/activity-leaderboard-backend/src/main/java/com/mdgspace/activityleaderboard/repository/ProjectRepository.java
 /home/yash/activity-leaderboard-stuffs/activity-leaderboard-backend/src/main/java/com/mdgspace/activityleaderboard/repository/ProjectRoleRepository.java
 /home/yash/activity-leaderboard-stuffs/activity-leaderboard-backend/src/main/java/com/mdgspace/activityleaderboard/security/jwt/AuthEntryPointJwt.java
