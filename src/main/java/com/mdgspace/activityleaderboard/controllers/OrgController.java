@@ -1,6 +1,6 @@
 package com.mdgspace.activityleaderboard.controllers;
 
-import org.apache.http.HttpStatus;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -13,7 +13,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.security.Principal;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import com.mdgspace.activityleaderboard.models.Organization;
@@ -22,6 +24,7 @@ import com.mdgspace.activityleaderboard.models.enums.EOrgRole;
 import com.mdgspace.activityleaderboard.models.roles.OrgRole;
 import com.mdgspace.activityleaderboard.payload.request.AddMembersRequest;
 import com.mdgspace.activityleaderboard.payload.request.AddOrgRequest;
+import com.mdgspace.activityleaderboard.payload.request.ChangeOrgMembersStatusRequest;
 import com.mdgspace.activityleaderboard.payload.response.AddMembersResponse;
 import com.mdgspace.activityleaderboard.repository.OrgRepository;
 import com.mdgspace.activityleaderboard.repository.OrgRoleRepository;
@@ -80,7 +83,6 @@ public class OrgController {
 
     }
 
-
     @DeleteMapping("/delete/{orgName}")
     public ResponseEntity<?> deleteOrg(@PathVariable String orgName, Principal principal ){
         try{
@@ -110,6 +112,34 @@ public class OrgController {
         }
     }
 
+
+    @PutMapping("/update/{orgName}")
+    public ResponseEntity<?> updateOrg(@PathVariable String orgName,@Valid @RequestBody AddOrgRequest updateOrgRequest, Principal principal){
+       try{
+            String username = principal.getName();
+            User user= userRepository.findByUsername(username).orElse(null);
+            Organization org= orgRepository.findByName(updateOrgRequest.getName()).orElse(null);
+            if(org==null){
+                return ResponseEntity.badRequest().body("Organization do not exist");
+            }
+            OrgRole orgRole=orgRoleRepository.findByOrganizationAndUser(org, user).orElse(null);
+            if(orgRole==null){
+                return ResponseEntity.badRequest().body("User do not belong to organization");
+            }
+            if(orgRole.getRole()!=EOrgRole.ADMIN){
+                return ResponseEntity.badRequest().body("User is not the admin of organization");
+            }
+            org.setName(updateOrgRequest.getName());
+            org.setDescription(updateOrgRequest.getDescription());
+            return ResponseEntity.badRequest().body("Organization data updated successfully");
+
+       }catch (Exception e){
+           log.error("Internal server error", e);
+           return ResponseEntity.internalServerError().body("Internal Server Error");
+
+       }
+    }
+
     @PutMapping("/addMembers/{orgName}")
     public ResponseEntity<?> addMembers(@Valid @RequestBody AddMembersRequest addMembersRequest, @PathVariable String orgName,Principal principal){
         try{
@@ -134,7 +164,7 @@ public class OrgController {
                     continue;
                 }
                 OrgRole new_memberOrgRole=orgRoleRepository.findByOrganizationAndUser(org, new_member).orElse(null);
-                if(orgRole!=null){
+                if(new_memberOrgRole!=null){
                     continue;
                 }
                 OrgRole newMenberOrgRole=new OrgRole(EOrgRole.MEMBER,org,new_member);
@@ -151,6 +181,66 @@ public class OrgController {
             return ResponseEntity.internalServerError().body("Internal Server Error");
         }
     }
+
+    @PutMapping("/changeMembersStatus/{orgName}")
+    public ResponseEntity<?> changeMembersStatus(@Valid @RequestBody ChangeOrgMembersStatusRequest changeOrgMembersStatusRequest,@PathVariable String orgName, Principal principal){
+     try{
+        Organization org= orgRepository.findByName(orgName).orElse(null);
+        if(org==null){
+            return ResponseEntity.badRequest().body("Organization do not exist");
+        }
+        String username=principal.getName();
+        User user=userRepository.findByUsername(username).orElse(null);
+        OrgRole userOrgRole=orgRoleRepository.findByOrganizationAndUser(org, user).orElse(null);
+        if(userOrgRole==null){
+            return ResponseEntity.badRequest().body("User does not belong to organization");
+        }
+        if(userOrgRole.getRole()!=EOrgRole.ADMIN){
+            return ResponseEntity.badRequest().body("User is not the admin of the organization");
+        }
+
+        Map<String,String> newStatus=changeOrgMembersStatusRequest.getOrgMembersStatus();
+        for(Map.Entry<String, String> e: newStatus.entrySet()){
+           String memberUsername=e.getKey();
+           String newRole=e.getValue().toLowerCase();
+           if(memberUsername==username){
+            continue;
+           }
+           User member=userRepository.findByUsername(memberUsername).orElse(user);
+           if(member==null){
+            continue;
+           }
+           OrgRole memberOrgRole=orgRoleRepository.findByOrganizationAndUser(org, member).orElse(null);
+           if(memberOrgRole==null){
+            continue;
+           }
+           if(newRole=="admin"){
+            memberOrgRole.setRole(EOrgRole.ADMIN);
+           }
+           else if(newRole=="manager"){
+            memberOrgRole.setRole(EOrgRole.MANAGER);
+           }
+           else if(newRole=="member"){
+            memberOrgRole.setRole(EOrgRole.MEMBER);
+           }
+           
+        }
+
+        return ResponseEntity.ok().body("Roles changed successfully");
+
+
+
+     }catch(Exception e){
+        log.error("Internal server error", e);
+        return ResponseEntity.internalServerError().body("Internal server error");
+     }
+    }
+
+
+
+ }
+
+
     
 
 
@@ -168,4 +258,4 @@ public class OrgController {
 
 
 
-}
+

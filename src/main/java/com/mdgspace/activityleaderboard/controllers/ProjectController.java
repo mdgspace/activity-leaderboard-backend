@@ -78,8 +78,8 @@ public class ProjectController {
            if(orgRole==null){
             return ResponseEntity.badRequest().body(new MessageAggregationException("User doesnot belongs to Organization"));
            }
-           if(orgRole.getRole()!=EOrgRole.ADMIN){
-            return ResponseEntity.badRequest().body(new MessageResponse("User is not the admin of the Organization"));
+           if(orgRole.getRole()!=EOrgRole.ADMIN && orgRole.getRole()!=EOrgRole.MANAGER){
+            return ResponseEntity.badRequest().body(new MessageResponse("User is not the admin or manager of the Organization"));
            }
 
            Project isProject= projectRepository.findByNameAndOrganization(addProjectRequest.getName(), org).orElse(null);
@@ -124,8 +124,8 @@ public class ProjectController {
         }
 
         OrgRole orgRole=orgRoleRepository.findByOrganizationAndUser(org, user).orElse(null);
-        if(orgRole.getRole()!=EOrgRole.ADMIN){
-          return ResponseEntity.badRequest().body(new MessageResponse("User is not the admin of organization"));
+        if(orgRole.getRole()!=EOrgRole.ADMIN && orgRole.getRole()!=EOrgRole.MANAGER){
+          return ResponseEntity.badRequest().body(new MessageResponse("User is not the admin or manager of organization"));
         }
 
         projectRepository.deleteById(project.getId());
@@ -143,5 +143,7 @@ public class ProjectController {
           return ResponseEntity.internalServerError().body(new MessageResponse("Internal Server Error"));
       }
     }
+
+        
 
 }
