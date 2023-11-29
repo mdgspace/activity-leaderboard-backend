@@ -19,12 +19,14 @@ import java.util.Map;
 import java.util.Set;
 
 import com.mdgspace.activityleaderboard.models.Organization;
+import com.mdgspace.activityleaderboard.models.Project;
 import com.mdgspace.activityleaderboard.models.User;
 import com.mdgspace.activityleaderboard.models.enums.EOrgRole;
 import com.mdgspace.activityleaderboard.models.roles.OrgRole;
 import com.mdgspace.activityleaderboard.payload.request.AddMembersRequest;
 import com.mdgspace.activityleaderboard.payload.request.AddOrgRequest;
 import com.mdgspace.activityleaderboard.payload.request.ChangeOrgMembersStatusRequest;
+import com.mdgspace.activityleaderboard.payload.request.SetArcheiveStatusRequest;
 import com.mdgspace.activityleaderboard.payload.response.AddMembersResponse;
 import com.mdgspace.activityleaderboard.payload.response.RemoveMembersResponse;
 import com.mdgspace.activityleaderboard.repository.OrgRepository;
@@ -141,7 +143,7 @@ public class OrgController {
        }
     }
 
-    @PutMapping("/addMembers/{orgName}")
+    @PostMapping("/addMembers/{orgName}")
     public ResponseEntity<?> addMembers(@Valid @RequestBody AddMembersRequest addMembersRequest, @PathVariable String orgName,Principal principal){
         try{
           
@@ -187,7 +189,7 @@ public class OrgController {
         }
     }
 
-    @PutMapping("/removeMembers/{orgName}")
+    @DeleteMapping("/removeMembers/{orgName}")
     public ResponseEntity<?> removeMembers(@Valid @RequestBody AddMembersRequest removeMembersRequest, @PathVariable String orgName, Principal principal){
         try{
           Organization org= orgRepository.findByName(orgName).orElse(null);
@@ -283,7 +285,45 @@ public class OrgController {
      }
     }
 
+   @PutMapping("/setArcheiveStatus/{orgName}")
+   public ResponseEntity<?> setArcheiveStatus(@Valid @RequestBody SetArcheiveStatusRequest setArcheiveStatusRequest,@PathVariable String orgName, Principal principal){
+     try{
 
+        Organization org= orgRepository.findByName(orgName).orElse(null);
+        if(org==null){
+            return ResponseEntity.badRequest().body("Organization does not exist");
+        }
+        String username=principal.getName();
+        User user=userRepository.findByUsername(username).orElse(null);
+        OrgRole orgRole=orgRoleRepository.findByOrganizationAndUser(org, user).orElse(null);
+        if(orgRole==null){
+            return ResponseEntity.badRequest().body("User does not belong to the organization");
+        }
+        if(orgRole.getRole()!=EOrgRole.ADMIN && orgRole.getRole()!=EOrgRole.MANAGER){
+            return ResponseEntity.badRequest().body("User is not the admin or manager of the organization");
+        }
+        Map<String, Boolean> newStatus= setArcheiveStatusRequest.getArcheiveStatus();
+
+        for(Map.Entry<String, Boolean> e: newStatus.entrySet()){
+            String projectName= e.getKey();
+            Boolean status= e.getValue();
+            
+            Project project= projectRepository.findByNameAndOrganization(projectName, org).orElse(null);
+            if(project==null){
+                continue;
+            }
+            project.setArcheive(status);
+
+        }
+
+        return ResponseEntity.ok().body("Archeive Status of projects updated successfully");
+
+     }catch(Exception e){
+         log.error("Internal Server Error", e);
+         return ResponseEntity.internalServerError().body("Internal Server Error");
+     }
+   }
+   
 
  }
 

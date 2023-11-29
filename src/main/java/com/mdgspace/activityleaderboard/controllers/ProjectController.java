@@ -187,7 +187,7 @@ public class ProjectController {
     }
   }
 
-  @PutMapping("/addMembers/{projectName}/{orgName}")
+  @PostMapping("/addMembers/{projectName}/{orgName}")
   public ResponseEntity<?> addMembers(@Valid @RequestBody AddMembersRequest addMembersRequest,
       @PathVariable String projectName, @PathVariable String orgName, Principal principal) {
     try {
@@ -241,7 +241,7 @@ public class ProjectController {
     }
   }
 
-  @PutMapping("/removeMembers/{projectName}/{orgName}")
+  @DeleteMapping("/removeMembers/{projectName}/{orgName}")
   public ResponseEntity<?> removeMembers(@Valid @RequestBody AddMembersRequest removMembersRequest, @PathVariable String projectName,@PathVariable String orgName, Principal principal){
     try{
        
