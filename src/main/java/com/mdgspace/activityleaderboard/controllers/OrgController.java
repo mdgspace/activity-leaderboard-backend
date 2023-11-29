@@ -201,6 +201,9 @@ public class OrgController {
             }
             Set<String> membersRemoved=new HashSet<>();
             for(String member: removeMembersRequest.getMembers()){
+                if(member==username){
+                    continue;
+                }
                 User remove_member=userRepository.findByUsername(member).orElse(null);
                 if(remove_member==null){
                     continue;
