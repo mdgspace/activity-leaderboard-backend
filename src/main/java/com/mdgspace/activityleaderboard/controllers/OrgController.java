@@ -26,6 +26,7 @@ import com.mdgspace.activityleaderboard.payload.request.AddMembersRequest;
 import com.mdgspace.activityleaderboard.payload.request.AddOrgRequest;
 import com.mdgspace.activityleaderboard.payload.request.ChangeOrgMembersStatusRequest;
 import com.mdgspace.activityleaderboard.payload.response.AddMembersResponse;
+import com.mdgspace.activityleaderboard.payload.response.RemoveMembersResponse;
 import com.mdgspace.activityleaderboard.repository.OrgRepository;
 import com.mdgspace.activityleaderboard.repository.OrgRoleRepository;
 import com.mdgspace.activityleaderboard.repository.ProjectRepository;
@@ -182,6 +183,45 @@ public class OrgController {
         }
     }
 
+    @PutMapping("/removeMembers/{orgName}")
+    public ResponseEntity<?> removeMembers(@Valid @RequestBody AddMembersRequest removeMembersRequest, @PathVariable String orgName, Principal principal){
+        try{
+          Organization org= orgRepository.findByName(orgName).orElse(null);
+            if(org==null){
+                return ResponseEntity.badRequest().body("Organization do not exist");
+            }
+            String username=principal.getName();
+            User user=userRepository.findByUsername(username).orElse(null);
+            OrgRole orgRole=orgRoleRepository.findByOrganizationAndUser(org, user).orElse(null);
+            if(orgRole==null){
+                return ResponseEntity.badRequest().body("User is not the admin of the organization");
+            }
+            if(orgRole.getRole()!=EOrgRole.ADMIN){
+                return ResponseEntity.badRequest().body("User is not the admin of the organization");
+            }
+            Set<String> membersRemoved=new HashSet<>();
+            for(String member: removeMembersRequest.getMembers()){
+                User remove_member=userRepository.findByUsername(member).orElse(null);
+                if(remove_member==null){
+                    continue;
+                }
+                OrgRole remove_memberOrgRole=orgRoleRepository.findByOrganizationAndUser(org, remove_member).orElse(null);
+                if(remove_memberOrgRole==null){
+                    continue;
+                }
+               
+                orgRoleRepository.deleteById(remove_memberOrgRole.getId());;
+                membersRemoved.add(member);
+
+            }
+
+            return ResponseEntity.ok().body(new RemoveMembersResponse(membersRemoved));
+
+        }catch(Exception e){
+          log.error("Internal server error", e);
+          return ResponseEntity.internalServerError().body("Internal server error");
+        }
+    }
     @PutMapping("/changeMembersStatus/{orgName}")
     public ResponseEntity<?> changeMembersStatus(@Valid @RequestBody ChangeOrgMembersStatusRequest changeOrgMembersStatusRequest,@PathVariable String orgName, Principal principal){
      try{
