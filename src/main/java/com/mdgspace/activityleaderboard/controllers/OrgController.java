@@ -27,6 +27,7 @@ import com.mdgspace.activityleaderboard.payload.request.AddMembersRequest;
 import com.mdgspace.activityleaderboard.payload.request.AddOrgRequest;
 import com.mdgspace.activityleaderboard.payload.request.ChangeOrgMembersStatusRequest;
 import com.mdgspace.activityleaderboard.payload.request.SetArcheiveStatusRequest;
+import com.mdgspace.activityleaderboard.payload.request.SetBookmarkStatusRequest;
 import com.mdgspace.activityleaderboard.payload.response.AddMembersResponse;
 import com.mdgspace.activityleaderboard.payload.response.RemoveMembersResponse;
 import com.mdgspace.activityleaderboard.repository.OrgRepository;
@@ -323,6 +324,46 @@ public class OrgController {
          return ResponseEntity.internalServerError().body("Internal Server Error");
      }
    }
+
+     @PutMapping("/setBookmarkStatus/{orgName}")
+   public ResponseEntity<?> setBookmarkStatus(@Valid @RequestBody SetBookmarkStatusRequest setBookmarkStatusRequest,@PathVariable String orgName, Principal principal){
+     try{
+
+        Organization org= orgRepository.findByName(orgName).orElse(null);
+        if(org==null){
+            return ResponseEntity.badRequest().body("Organization does not exist");
+        }
+        String username=principal.getName();
+        User user=userRepository.findByUsername(username).orElse(null);
+        OrgRole orgRole=orgRoleRepository.findByOrganizationAndUser(org, user).orElse(null);
+        if(orgRole==null){
+            return ResponseEntity.badRequest().body("User does not belong to the organization");
+        }
+        if(orgRole.getRole()!=EOrgRole.ADMIN && orgRole.getRole()!=EOrgRole.MANAGER){
+            return ResponseEntity.badRequest().body("User is not the admin or manager of the organization");
+        }
+        Map<String, Boolean> newStatus= setBookmarkStatusRequest.getBookmarkStatus();
+
+        for(Map.Entry<String, Boolean> e: newStatus.entrySet()){
+            String projectName= e.getKey();
+            Boolean status= e.getValue();
+            
+            Project project= projectRepository.findByNameAndOrganization(projectName, org).orElse(null);
+            if(project==null){
+                continue;
+            }
+            project.setBookmarked(status);
+
+        }
+
+        return ResponseEntity.ok().body("Bookmark Status of projects updated successfully");
+
+     }catch(Exception e){
+         log.error("Internal Server Error", e);
+         return ResponseEntity.internalServerError().body("Internal Server Error");
+     }
+   }
+
    
 
  }
