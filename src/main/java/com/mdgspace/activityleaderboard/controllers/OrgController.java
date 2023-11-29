@@ -145,11 +145,15 @@ public class OrgController {
     public ResponseEntity<?> addMembers(@Valid @RequestBody AddMembersRequest addMembersRequest, @PathVariable String orgName,Principal principal){
         try{
           
+            
             Organization org= orgRepository.findByName(orgName).orElse(null);
             if(org==null){
                 return ResponseEntity.badRequest().body("Organization do not exist");
             }
             String username=principal.getName();
+            if(orgName==username+"/userSpace"){
+                return ResponseEntity.badRequest().body("Members cant be added to userSpace");
+            }
             User user=userRepository.findByUsername(username).orElse(null);
             OrgRole orgRole=orgRoleRepository.findByOrganizationAndUser(org, user).orElse(null);
             if(orgRole==null){
