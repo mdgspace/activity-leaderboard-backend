@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -124,6 +125,7 @@ public class ProjectController {
         }
 
         OrgRole orgRole=orgRoleRepository.findByOrganizationAndUser(org, user).orElse(null);
+        
         if(orgRole.getRole()!=EOrgRole.ADMIN && orgRole.getRole()!=EOrgRole.MANAGER){
           return ResponseEntity.badRequest().body(new MessageResponse("User is not the admin or manager of organization"));
         }
@@ -132,10 +134,10 @@ public class ProjectController {
         
         ProjectRole projectRole= projectRoleRepository.findByProjectAndUser(project,user).orElse(null);
 
-        if(projectRole!=null){
-          projectRoleRepository.deleteById(projectRole.getId());
+        if(projectRole==null){
+          return ResponseEntity.badRequest().body("Project in this org doesnot exists");
         }
-        
+        projectRoleRepository.deleteById(projectRole.getId());
         return ResponseEntity.ok().body(new MessageResponse("Project deleted successfully"));
 
       }catch (Exception e){
@@ -144,6 +146,39 @@ public class ProjectController {
       }
     }
 
+
+    @PutMapping("/update/{projectName}/{orgName}")
+    public ResponseEntity<?> updateProject(@Valid @RequestBody AddProjectRequest updateProjectRequest,@PathVariable String projectName, @PathVariable String orgName, Principal principal){
+      try{
+        String username= principal.getName();
+        Organization org= orgRepository.findByName(orgName).orElse(null);
+        User user=userRepository.findByUsername(username).orElse(null);
+        if(org==null){
+          return ResponseEntity.badRequest().body(new MessageResponse("Organization not found"));
+        }
+        Project project = projectRepository.findByNameAndOrganization(projectName, org).orElse(null);
+        if(project==null){
+          return ResponseEntity.badRequest().body("Project do not exists in org");
+        }
+        OrgRole orgRole=orgRoleRepository.findByOrganizationAndUser(org, user).orElse(null);
+        if(orgRole==null){
+          return ResponseEntity.badRequest().body("User is not the member of org");
+        }
+        if(orgRole.getRole()!=EOrgRole.ADMIN && orgRole.getRole()!=EOrgRole.MANAGER){
+          return ResponseEntity.badRequest().body("User is not the admin or manager of the org");
+        }
+
+        project.setName(updateProjectRequest.getName());
+        project.setDescription(updateProjectRequest.getDescription());
+        project.setLink(updateProjectRequest.getLink());
+
+        return ResponseEntity.ok().body("Project details updated");
         
+
+      }catch(Exception e){
+        logger.error("Internal server error", e);
+        return ResponseEntity.internalServerError().body("Internal server error");
+      }
+    }
 
 }

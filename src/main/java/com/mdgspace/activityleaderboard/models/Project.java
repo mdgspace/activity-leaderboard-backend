@@ -29,6 +29,7 @@ public class Project {
     @Size(max=10)
     private String name;
 
+
     @NotBlank
     @Size(max=30)
     private String link;
@@ -72,6 +73,10 @@ public class Project {
     return name;
    }
 
+   public String getLink(){
+    return link;
+   }
+
    public String getDescription(){
     return description;
    }
@@ -106,6 +111,10 @@ public class Project {
 
    public void setBookmarked(boolean bookmarked){
     this.bookmarked=bookmarked;
+   }
+
+   public void setLink(String link){
+    this.link=link;
    }
 
    public void setArcheive(boolean archeive){
