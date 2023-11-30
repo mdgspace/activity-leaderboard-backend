@@ -2,6 +2,7 @@ package com.mdgspace.activityleaderboard.controllers;
 
 import java.security.Principal;
 import java.util.Optional;
+import java.util.Set;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.method.P;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -25,10 +27,13 @@ import com.mdgspace.activityleaderboard.models.Organization;
 import com.mdgspace.activityleaderboard.models.Project;
 import com.mdgspace.activityleaderboard.models.User;
 import com.mdgspace.activityleaderboard.models.enums.EOrgRole;
+import com.mdgspace.activityleaderboard.models.enums.EProjectRole;
 import com.mdgspace.activityleaderboard.models.roles.OrgRole;
+import com.mdgspace.activityleaderboard.models.roles.ProjectRole;
 import com.mdgspace.activityleaderboard.payload.request.SetArcheiveStatusRequest;
 import com.mdgspace.activityleaderboard.payload.request.SetBookmarkStatusRequest;
 import com.mdgspace.activityleaderboard.payload.response.GetUsersOrgs;
+import com.mdgspace.activityleaderboard.payload.response.GetUsersProjectsResponse;
 import com.mdgspace.activityleaderboard.payload.response.MessageResponse;
 import com.mdgspace.activityleaderboard.payload.response.UsersResponse;
 import com.mdgspace.activityleaderboard.repository.OrgRepository;
@@ -159,9 +164,9 @@ public class UserController {
      }
 
      @GetMapping("/getUserOrgs/{userName}")
-     public ResponseEntity<?> getUserOrgs(@PathVariable String username){
+     public ResponseEntity<?> getUserOrgs(@PathVariable String userName){
           try{
-            User user =userRepository.findByUsername(username).orElse(null);
+            User user =userRepository.findByUsername(userName).orElse(null);
             if(user==null){
                return ResponseEntity.badRequest().body("User with username does not exists");
             }
@@ -182,6 +187,32 @@ public class UserController {
           }catch(Exception e){
             logger.error("Internal Server Error", e);
             return ResponseEntity.internalServerError().body("Internal Server Error");
+          }
+     }
+
+     @GetMapping("/getUsersProjects/{userName}")
+     public ResponseEntity<?> getUsersProjects(@PathVariable String userName){
+          try{
+
+               User user=userRepository.findByUsername(userName).orElse(null);
+               if(user==null){
+                    return ResponseEntity.badRequest().body("User with this username does not exists");
+               }
+               List<ProjectRole> projectRoles= projectRoleRepository.findByUser(user);
+               Map<String,String> response= new HashMap<>();
+               for(ProjectRole role:projectRoles){
+                 Project project= role.getProject();
+                 if(role.getRole()==EProjectRole.ADMIN){
+                    response.put(project.getName(), "admin");
+                 }else{
+                    response.put(project.getName(), "member");
+                 }
+                 
+               }
+               return ResponseEntity.ok().body(new GetUsersProjectsResponse(response));
+          }catch(Exception e){
+               logger.error("Internal Server Error", e);
+               return ResponseEntity.internalServerError().body("Internal Server Error");
           }
      }
 
