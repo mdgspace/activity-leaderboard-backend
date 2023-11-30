@@ -395,10 +395,48 @@ public class OrgController {
     }
    }
 
+   @GetMapping("/getProjects/{orgName}")
+   public ResponseEntity<?> getBookmark(@PathVariable String orgName){
+    try{
+
+      Organization org = orgRepository.findByName(orgName).orElse(null);
+      if(org==null){
+        return ResponseEntity.badRequest().body("Organization not found");
+      }
+      Set<Project> projects= org.getProjects();
+     Map<String,Map<String,Boolean>> res_project=new HashMap<>();
+      for(Project project: projects){
+        
+        Map<String,Boolean> projectStatus= new HashMap<>();
+       
+        if(project.getBookmarked()){
+          projectStatus.put("bookmark", true);
+        }else{
+            projectStatus.put("bookmark", false);
+        }
+
+        if(project.getArcheive()){
+            projectStatus.put("archeive", true);
+        }else{
+            projectStatus.put("archeive", false);
+        }
+        res_project.put(project.getName(),projectStatus);
+
+
+      }
+      return ResponseEntity.ok().body(new GetProjectsResponse(res_project));
+
+    }catch (Exception e){
+       log.error("Internal Server Error",e);
+       return ResponseEntity.internalServerError().body("Internal Server Error");
+    }
+   }
+
  }
 
 
-    
+
+
 
 
 
