@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.security.Principal;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -446,6 +447,17 @@ public class OrgController {
     }catch(Exception e){
        log.error("Internal server error", e);
        return ResponseEntity.internalServerError().body("Internal Server Error");
+    }
+   }
+
+   @GetMapping("/getAllOrg")
+   public ResponseEntity<?> getAllOrgs(){
+    try{
+      List<Organization> orgs=orgRepository.findAll();
+      return ResponseEntity.ok().body(orgs);
+    }catch(Exception e){
+      log.error("Internal Server Error", e);
+      return ResponseEntity.internalServerError().body("Internal Server Error");
     }
    }
 
