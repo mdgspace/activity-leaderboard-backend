@@ -2,6 +2,7 @@ package com.mdgspace.activityleaderboard.controllers;
 
 import java.security.Principal;
 import java.util.Optional;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -23,9 +24,11 @@ import org.springframework.web.bind.annotation.RestController;
 import com.mdgspace.activityleaderboard.models.Organization;
 import com.mdgspace.activityleaderboard.models.Project;
 import com.mdgspace.activityleaderboard.models.User;
+import com.mdgspace.activityleaderboard.models.enums.EOrgRole;
 import com.mdgspace.activityleaderboard.models.roles.OrgRole;
 import com.mdgspace.activityleaderboard.payload.request.SetArcheiveStatusRequest;
 import com.mdgspace.activityleaderboard.payload.request.SetBookmarkStatusRequest;
+import com.mdgspace.activityleaderboard.payload.response.GetUsersOrgs;
 import com.mdgspace.activityleaderboard.payload.response.MessageResponse;
 import com.mdgspace.activityleaderboard.payload.response.UsersResponse;
 import com.mdgspace.activityleaderboard.repository.OrgRepository;
@@ -155,7 +158,31 @@ public class UserController {
           }
      }
 
-     // @GetMapping("/getOrgs/{userName}")
-     // public ResponseEntity<?> getOrgs()
+     @GetMapping("/getUserOrgs/{userName}")
+     public ResponseEntity<?> getUserOrgs(@PathVariable String username){
+          try{
+            User user =userRepository.findByUsername(username).orElse(null);
+            if(user==null){
+               return ResponseEntity.badRequest().body("User with username does not exists");
+            }
+            List<OrgRole> orgRoles=orgRoleRepository.findByUser(user);
+            Map<String,String> response = new HashMap<>();
+            for(OrgRole orgRole:orgRoles){
+               Organization org=orgRole.getOrganization();
+               if(orgRole.getRole()==EOrgRole.ADMIN){
+                    response.put(org.getName(),"admin");
+               }
+               else if(orgRole.getRole()==EOrgRole.MANAGER){
+                    response.put(org.getName(), "manager");
+               }else{
+                    response.put(org.getName(), "member");
+               }
+            }
+            return ResponseEntity.ok().body(new GetUsersOrgs(response));
+          }catch(Exception e){
+            logger.error("Internal Server Error", e);
+            return ResponseEntity.internalServerError().body("Internal Server Error");
+          }
+     }
 
 }
