@@ -31,6 +31,7 @@ import com.mdgspace.activityleaderboard.payload.request.ChangeOrgMembersStatusRe
 import com.mdgspace.activityleaderboard.payload.request.SetArcheiveStatusRequest;
 import com.mdgspace.activityleaderboard.payload.request.SetBookmarkStatusRequest;
 import com.mdgspace.activityleaderboard.payload.response.AddMembersResponse;
+import com.mdgspace.activityleaderboard.payload.response.GetAllOrgsResponse;
 import com.mdgspace.activityleaderboard.payload.response.GetMembersResponse;
 import com.mdgspace.activityleaderboard.payload.response.GetProjectsResponse;
 import com.mdgspace.activityleaderboard.payload.response.RemoveMembersResponse;
@@ -454,7 +455,7 @@ public class OrgController {
    public ResponseEntity<?> getAllOrgs(){
     try{
       List<Organization> orgs=orgRepository.findAll();
-      return ResponseEntity.ok().body(orgs);
+      return ResponseEntity.ok().body(new GetAllOrgsResponse(orgs));
     }catch(Exception e){
       log.error("Internal Server Error", e);
       return ResponseEntity.internalServerError().body("Internal Server Error");
