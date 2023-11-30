@@ -346,7 +346,25 @@ public class ProjectController {
      }
   }
 
- 
+ @GetMapping("/getProject/{projectName}/{orgName}")
+ public ResponseEntity<?> getProject(@PathVariable String projectName, @PathVariable String orgName ){
+  try{
+    Organization org= orgRepository.findByName(orgName).orElse(null);
+        if(org==null){
+            return ResponseEntity.badRequest().body("Organization do not exist");
+      }
+
+      Project project =projectRepository.findByNameAndOrganization(projectName, org).orElse(null);
+      if(project==null){
+        return ResponseEntity.badRequest().body("Project do not exist");
+      }
+      return ResponseEntity.ok().body(project);
+  }catch(Exception e){
+     logger.error("Internal Server Error", e);
+     return ResponseEntity.internalServerError().body("Internal Server Error");
+  }
+ }
+  
 
 }
 
