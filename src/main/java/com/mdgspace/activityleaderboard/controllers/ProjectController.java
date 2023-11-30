@@ -1,6 +1,7 @@
 package com.mdgspace.activityleaderboard.controllers;
 
 import java.security.Principal;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Optional;
@@ -31,6 +32,7 @@ import com.mdgspace.activityleaderboard.payload.request.AddMembersRequest;
 import com.mdgspace.activityleaderboard.payload.request.AddProjectRequest;
 import com.mdgspace.activityleaderboard.payload.request.ChangeProjectMembersStatusRequest;
 import com.mdgspace.activityleaderboard.payload.response.AddMembersResponse;
+import com.mdgspace.activityleaderboard.payload.response.GetMembersResponse;
 import com.mdgspace.activityleaderboard.payload.response.MessageResponse;
 import com.mdgspace.activityleaderboard.repository.OrgRepository;
 import com.mdgspace.activityleaderboard.repository.OrgRoleRepository;
@@ -365,7 +367,37 @@ public class ProjectController {
   }
  }
   
+ @GetMapping("/getMembers/{projectName}/{orgName}")
+ public ResponseEntity<?> getMembers(@PathVariable String projectName, @PathVariable String orgName){
+  try{
+     Organization org= orgRepository.findByName(orgName).orElse(null);
+        if(org==null){
+            return ResponseEntity.badRequest().body("Organization do not exist");
+      }
 
+      Project project =projectRepository.findByNameAndOrganization(projectName, org).orElse(null);
+      if(project==null){
+        return ResponseEntity.badRequest().body("Project do not exist");
+      }
+
+      Set<ProjectRole> projectRoles= project.getProjectRoles();
+      Map<String, String> members_res=new HashMap<>();
+      for(ProjectRole role: projectRoles){
+        User user= role.getUser();
+        if(role.getRole()==EProjectRole.ADMIN){
+          members_res.put(user.getUsername(),"admin");
+        }else{
+          members_res.put(user.getUsername(), "member");
+        }
+      }
+
+      return ResponseEntity.ok().body(new GetMembersResponse(members_res));
+
+  }catch(Exception e){
+    logger.error("Internal server error", e);
+    return ResponseEntity.internalServerError().body("Internal Server Error");
+  }
+ }
 
 
 }
