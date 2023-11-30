@@ -31,6 +31,7 @@ import com.mdgspace.activityleaderboard.payload.request.SetArcheiveStatusRequest
 import com.mdgspace.activityleaderboard.payload.request.SetBookmarkStatusRequest;
 import com.mdgspace.activityleaderboard.payload.response.AddMembersResponse;
 import com.mdgspace.activityleaderboard.payload.response.GetMembersResponse;
+import com.mdgspace.activityleaderboard.payload.response.GetProjectsResponse;
 import com.mdgspace.activityleaderboard.payload.response.RemoveMembersResponse;
 import com.mdgspace.activityleaderboard.repository.OrgRepository;
 import com.mdgspace.activityleaderboard.repository.OrgRoleRepository;
@@ -428,6 +429,22 @@ public class OrgController {
 
     }catch (Exception e){
        log.error("Internal Server Error",e);
+       return ResponseEntity.internalServerError().body("Internal Server Error");
+    }
+   }
+
+   @GetMapping("/getOrg/{orgName}")
+   public ResponseEntity<?> getOrg(@PathVariable String orgName){
+    try{
+
+        Organization org= orgRepository.findByName(orgName).orElse(null);
+        if(org==null){
+            return ResponseEntity.badRequest().body("Organization not found");
+        }
+        return ResponseEntity.ok().body(org);
+
+    }catch(Exception e){
+       log.error("Internal server error", e);
        return ResponseEntity.internalServerError().body("Internal Server Error");
     }
    }

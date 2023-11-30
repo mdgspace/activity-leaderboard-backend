@@ -41,7 +41,7 @@ public class Organization {
     @Size(max = 40)
     private String description;
 
-
+    @JsonIgnore
     @Size(max= 30)
     private String icon;
 
