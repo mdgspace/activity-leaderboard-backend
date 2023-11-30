@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -29,6 +30,7 @@ import com.mdgspace.activityleaderboard.payload.request.ChangeOrgMembersStatusRe
 import com.mdgspace.activityleaderboard.payload.request.SetArcheiveStatusRequest;
 import com.mdgspace.activityleaderboard.payload.request.SetBookmarkStatusRequest;
 import com.mdgspace.activityleaderboard.payload.response.AddMembersResponse;
+import com.mdgspace.activityleaderboard.payload.response.GetMembersResponse;
 import com.mdgspace.activityleaderboard.payload.response.RemoveMembersResponse;
 import com.mdgspace.activityleaderboard.repository.OrgRepository;
 import com.mdgspace.activityleaderboard.repository.OrgRoleRepository;
@@ -364,7 +366,34 @@ public class OrgController {
      }
    }
 
-   
+   @GetMapping("/getMembers/{orgName}")
+   public ResponseEntity<?> getMembers(@PathVariable String orgName){
+    try{
+      Organization org = orgRepository.findByName(orgName).orElse(null);
+      if(org==null){
+        return ResponseEntity.badRequest().body("Organization not found");
+      }
+      Set<OrgRole> orgRoles=org.getOrgRoles();
+      Map<String, String> response= new HashMap<>();
+
+      for(OrgRole role:orgRoles){
+        User user= role.getUser();
+        EOrgRole eOrgRole=role.getRole();
+        if(eOrgRole==EOrgRole.ADMIN){
+            response.put(user.getUsername(), "admin");
+        }else if(eOrgRole==EOrgRole.MANAGER){
+            response.put(user.getUsername(), "manager");
+        }else{
+            response.put(user.getUsername(),"member");
+        }
+      }
+      return ResponseEntity.ok().body(new GetMembersResponse(response));
+
+    }catch(Exception e){
+          log.error("Internal server error", e);
+          return ResponseEntity.internalServerError().body("Internal Server error");
+    }
+   }
 
  }
 

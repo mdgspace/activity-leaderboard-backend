@@ -99,6 +99,7 @@ public class OrgRole {
     public void setArcheive(Boolean archeive){
         this.archeive=archeive;
     }
+    
 
 
 
