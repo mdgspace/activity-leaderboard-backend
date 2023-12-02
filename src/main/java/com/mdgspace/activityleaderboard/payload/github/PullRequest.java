@@ -1,5 +1,6 @@
 package com.mdgspace.activityleaderboard.payload.github;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -20,8 +21,8 @@ public class PullRequest {
     private String title;
 
     @JsonProperty("created_at")
-    private Date created_at;
+    private LocalDateTime created_at;
 
     @JsonProperty("updated_at")
-    private Date updated_at;
+    private LocalDateTime updated_at;
 }

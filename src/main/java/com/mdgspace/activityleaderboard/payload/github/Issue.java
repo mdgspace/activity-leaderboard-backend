@@ -1,5 +1,6 @@
 package com.mdgspace.activityleaderboard.payload.github;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -21,9 +22,9 @@ public class Issue {
     public UserObject user;
 
     @JsonProperty("created_at")
-    public Date created_at;
+    public LocalDateTime created_at;
 
     @JsonProperty("updated_at")
-    public Date updated_at;
+    public LocalDateTime updated_at;
 
 }

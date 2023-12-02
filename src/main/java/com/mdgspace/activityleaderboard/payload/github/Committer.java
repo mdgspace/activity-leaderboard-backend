@@ -1,5 +1,6 @@
 package com.mdgspace.activityleaderboard.payload.github;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -20,7 +21,7 @@ public class Committer {
     private String email;
 
     @JsonProperty("date")
-    private Date date;
+    private LocalDateTime date;
 
     @JsonProperty("login")
     private String username;

@@ -154,8 +154,6 @@ public class AuthControler {
                 OrgRole new_org_role= new OrgRole(eOrgRole,new_org,new_user);
                 orgRoleRepository.save(new_org_role);
 
-              
-               
 
             }
             if(isUser){           
