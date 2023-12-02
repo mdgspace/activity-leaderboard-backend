@@ -103,7 +103,7 @@ public class AuthControler {
             // url to fetch access token
             String auth_url = githubAuthUrl + params;
 
-            // fior fetching 
+            // for fetching 
             WebClient.Builder builder = WebClient.builder();
 
             // github returned this token, this token can be used to get other user details

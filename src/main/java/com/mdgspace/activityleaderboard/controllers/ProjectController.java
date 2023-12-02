@@ -40,6 +40,8 @@ import com.mdgspace.activityleaderboard.repository.ProjectRepository;
 import com.mdgspace.activityleaderboard.repository.ProjectRoleRepository;
 import com.mdgspace.activityleaderboard.repository.UserRepository;
 import com.mdgspace.activityleaderboard.security.jwt.AuthEntryPointJwt;
+import com.mdgspace.activityleaderboard.services.github.service.GithubService;
+import com.mdgspace.activityleaderboard.services.github.service.GithubServiceImpl;
 
 import io.netty.handler.codec.MessageAggregationException;
 import jakarta.validation.Valid;
@@ -65,6 +67,9 @@ public class ProjectController {
 
   @Autowired
   ProjectRoleRepository projectRoleRepository;
+
+  @Autowired
+  GithubService githubService;
 
   @PostMapping("/add/{orgName}")
   public ResponseEntity<?> addProject(@Valid @RequestBody AddProjectRequest addProjectRequest,
@@ -95,6 +100,12 @@ public class ProjectController {
       if (isProject != null) {
         return ResponseEntity.badRequest().body("Project Name Already Taken");
       }
+      
+      Boolean isValidLink=githubService.isValidLink(addProjectRequest.getLink(),user.getAccesstoken());
+      if(!isValidLink){
+        return ResponseEntity.badRequest().body("Invalid link provided by the user");
+      }
+
 
       Project new_Project = new Project(addProjectRequest.getName(), addProjectRequest.getLink(),
           addProjectRequest.getDescription(), org);
