@@ -8,6 +8,7 @@ import java.util.regex.Pattern;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import com.mdgspace.activityleaderboard.payload.github.ContributorsStats;
 import com.mdgspace.activityleaderboard.payload.github.Issue;
 import com.mdgspace.activityleaderboard.payload.github.PullRequest;
 import com.mdgspace.activityleaderboard.payload.github.Repository;
@@ -76,7 +77,7 @@ public class GithubServiceImpl implements GithubService {
         url = githubApiUrl+"repos/"+ownerAndRepo[0]+"/"+ownerAndRepo[1]+"/"+"pulls?state=all?per_page=100?page=";
       }
       while(true){
-        url=url+pageNo;
+        url=url+String.valueOf(pageNo);
 
         PullRequest[] pulls= builder.build().get().uri(url).header("Accept", "Application/json").header("Authorization", "Bearer "+accessToken).header("X-GitHub-Api-Version", "2022-11-28").retrieve().bodyToMono(PullRequest[].class).block();
         if(pulls.length==0){
@@ -119,8 +120,67 @@ public class GithubServiceImpl implements GithubService {
       
     }
 
+    @Override
+    public Issue[] totalIssues(Boolean open, String link ,String accessToken){
+      String[] ownerAndRepo=extractOwnerAndRepo(link);
 
-    
+      String url=githubApiUrl+"/repos/"+ownerAndRepo[0]+"/"+ownerAndRepo[1]+"/issues?state=all?per_page=100?page=";
+       if(open){
+        url=githubApiUrl+"/repos/"+ownerAndRepo[0]+"/"+ownerAndRepo[1]+"/issues?state=open?per_page=100?page=";
+       }
+       Issue[] totalIssues={};
+       WebClient.Builder builder=WebClient.builder();
+       int pageNo=1;
+       while(true){
+         url=url+String.valueOf(pageNo);
+        
+          Issue[] issues= builder.build().get().uri(url).header("Accept", "Application/json").header("Authorization", "Bearer "+accessToken).header("X-GitHub-Api-Version", "2022-11-28").retrieve().bodyToMono(Issue[].class).block();
+        if(issues.length==0){
+            break;
+        }
+        int total_issuesLength=totalIssues.length;
+        int issuesLength=issues.length;
+        Issue[] result=new Issue[total_issuesLength+issuesLength];
+        System.arraycopy(totalIssues, 0, result, 0, total_issuesLength);
+        System.arraycopy(issues,0,result,total_issuesLength,issuesLength);
+        totalIssues=result;
+         
+        pageNo++;
+       }
+
+       return totalIssues;
+      
+    }
+       
+    @Override
+    public ContributorsStats[] contributorsStats(String link, String accessToken){
+          String[] ownerAndRepo=extractOwnerAndRepo(link);
+          ContributorsStats[] total_contributions={};
+          String url=githubApiUrl+"/repos/"+ownerAndRepo[0]+"/"+ownerAndRepo[1]+"/stats/contributors?per_page=100?page=";
+          int pageNo=1;
+          WebClient.Builder builder=WebClient.builder();
+          while(true){
+            url=url+String.valueOf(pageNo);
+            ContributorsStats[] contributions= builder.build().get().uri(url).header("Accept", "Application/json").header("Authorization", "Bearer "+accessToken).header("X-GitHub-Api-Version", "2022-11-28").retrieve().bodyToMono(ContributorsStats[].class).block();
+            if(contributions.length==0){
+               break;
+             }
+           
+              int total_contributionsLength=total_contributions.length;
+        int contributionsLength=contributions.length;
+        ContributorsStats[] result=new ContributorsStats[total_contributionsLength+contributionsLength];
+        System.arraycopy(total_contributions, 0, result, 0, total_contributionsLength);
+        System.arraycopy(contributions,0,result,total_contributionsLength,contributionsLength);
+        total_contributions=result;
+         
+
+
+            pageNo++;
+
+          }
+
+          return total_contributions;
+    }
 
     private static String[] extractOwnerAndRepo(String repoLink) {
         String[] ans = {null,null};

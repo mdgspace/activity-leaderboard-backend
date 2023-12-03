@@ -48,7 +48,6 @@ import jakarta.validation.Valid;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
-
 @RequestMapping("/api/protected/project")
 public class ProjectController {
   private static final Logger logger = LoggerFactory.getLogger(ProjectController.class);
