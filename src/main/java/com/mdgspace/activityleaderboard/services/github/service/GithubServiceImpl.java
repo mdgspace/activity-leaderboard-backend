@@ -8,7 +8,7 @@ import java.util.regex.Pattern;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import com.mdgspace.activityleaderboard.payload.github.ContributorsStats;
+import com.mdgspace.activityleaderboard.payload.github.Commit;
 import com.mdgspace.activityleaderboard.payload.github.Issue;
 import com.mdgspace.activityleaderboard.payload.github.PullRequest;
 import com.mdgspace.activityleaderboard.payload.github.Repository;
@@ -62,19 +62,19 @@ public class GithubServiceImpl implements GithubService {
 
 
     @Override
-    public PullRequest[] totalPullRequests(String repoLink, String accessToken,Boolean week, Boolean month ){
+    public PullRequest[] totalPullRequests(String repoLink, String accessToken, Boolean month ){
       String[] ownerAndRepo=extractOwnerAndRepo(repoLink);
       PullRequest[] total_pull={};
       WebClient.Builder builder=WebClient.builder();
       int pageNo=1;
-      String url="";
-      if(week){
-         url = githubApiUrl+"repos/"+ownerAndRepo[0]+"/"+ownerAndRepo[1]+"/"+"pulls?state=all?per_page=100?page=";
-      }
-      else if(month){
+     
+      
+        String url = "";
+      
+     if(month){
         url = githubApiUrl+"repos/"+ownerAndRepo[0]+"/"+ownerAndRepo[1]+"/"+"pulls?state=all?per_page=100?page=";
       }else{
-        url = githubApiUrl+"repos/"+ownerAndRepo[0]+"/"+ownerAndRepo[1]+"/"+"pulls?state=all?per_page=100?page=";
+         url = githubApiUrl+"repos/"+ownerAndRepo[0]+"/"+ownerAndRepo[1]+"/"+"pulls?state=all?per_page=100?page=";
       }
       while(true){
         url=url+String.valueOf(pageNo);
@@ -94,20 +94,19 @@ public class GithubServiceImpl implements GithubService {
         
       }
 
-      if(week){
+
+      if(month){
         List<PullRequest> res= new ArrayList();
-        LocalDateTime dateToComp= getPastMonday();
+        LocalDateTime dateToComp= getFirstDayOfMonthAtMidnight();
         for(PullRequest pullRequest:total_pull){
            if(dateToComp.isBefore(pullRequest.getCreated_at())|| dateToComp.isEqual(pullRequest.getCreated_at()) || dateToComp.isEqual(pullRequest.getUpdated_at()) || dateToComp.isBefore(pullRequest.getUpdated_at())){
              res.add(pullRequest);
            }
         }
         total_pull=res.toArray(new PullRequest[0]);
-      }
-
-      else if(month){
-        List<PullRequest> res= new ArrayList();
-        LocalDateTime dateToComp= getFirstDayOfMonthAtMidnight();
+      }else{
+          List<PullRequest> res= new ArrayList();
+        LocalDateTime dateToComp= getPastMonday();
         for(PullRequest pullRequest:total_pull){
            if(dateToComp.isBefore(pullRequest.getCreated_at())|| dateToComp.isEqual(pullRequest.getCreated_at()) || dateToComp.isEqual(pullRequest.getUpdated_at()) || dateToComp.isBefore(pullRequest.getUpdated_at())){
              res.add(pullRequest);
@@ -121,13 +120,18 @@ public class GithubServiceImpl implements GithubService {
     }
 
     @Override
-    public Issue[] totalIssues(Boolean open, String link ,String accessToken){
+    public Issue[] totalIssues(String link ,String accessToken, Boolean month){
       String[] ownerAndRepo=extractOwnerAndRepo(link);
+      
+      String url="";
+      if(month){
+        LocalDateTime since=getFirstDayOfMonthAtMidnight();
+        url=githubApiUrl+"/repos/"+ownerAndRepo[0]+"/"+ownerAndRepo[1]+"/issues?state=all?since="+since+"?per_page=100?page=";
+      }else{
+        LocalDateTime since=getPastMonday();
+         url=githubApiUrl+"/repos/"+ownerAndRepo[0]+"/"+ownerAndRepo[1]+"/issues?state=all?since="+since+"?per_page=100?page=";        
+      }
 
-      String url=githubApiUrl+"/repos/"+ownerAndRepo[0]+"/"+ownerAndRepo[1]+"/issues?state=all?per_page=100?page=";
-       if(open){
-        url=githubApiUrl+"/repos/"+ownerAndRepo[0]+"/"+ownerAndRepo[1]+"/issues?state=open?per_page=100?page=";
-       }
        Issue[] totalIssues={};
        WebClient.Builder builder=WebClient.builder();
        int pageNo=1;
@@ -153,25 +157,32 @@ public class GithubServiceImpl implements GithubService {
     }
        
     @Override
-    public ContributorsStats[] contributorsStats(String link, String accessToken){
+    public Commit[] contributorsStats(String link, String accessToken, Boolean month){
           String[] ownerAndRepo=extractOwnerAndRepo(link);
-          ContributorsStats[] total_contributions={};
-          String url=githubApiUrl+"/repos/"+ownerAndRepo[0]+"/"+ownerAndRepo[1]+"/stats/contributors?per_page=100?page=";
+          Commit[] total_commits={};
+          String url="";
+          if(month){
+            LocalDateTime since=getFirstDayOfMonthAtMidnight();
+             url=githubApiUrl+"/repos/"+ownerAndRepo[0]+"/"+ownerAndRepo[1]+"/stats/contributors?since"+since+"?per_page=100?page=";
+          }else{
+            LocalDateTime since=getPastMonday();
+             url=githubApiUrl+"/repos/"+ownerAndRepo[0]+"/"+ownerAndRepo[1]+"/stats/contributors?since"+since+"?per_page=100?page=";
+          }
           int pageNo=1;
           WebClient.Builder builder=WebClient.builder();
           while(true){
             url=url+String.valueOf(pageNo);
-            ContributorsStats[] contributions= builder.build().get().uri(url).header("Accept", "Application/json").header("Authorization", "Bearer "+accessToken).header("X-GitHub-Api-Version", "2022-11-28").retrieve().bodyToMono(ContributorsStats[].class).block();
-            if(contributions.length==0){
+            Commit[] commits= builder.build().get().uri(url).header("Accept", "Application/json").header("Authorization", "Bearer "+accessToken).header("X-GitHub-Api-Version", "2022-11-28").retrieve().bodyToMono(Commit[].class).block();
+            if(commits.length==0){
                break;
              }
            
-              int total_contributionsLength=total_contributions.length;
-        int contributionsLength=contributions.length;
-        ContributorsStats[] result=new ContributorsStats[total_contributionsLength+contributionsLength];
-        System.arraycopy(total_contributions, 0, result, 0, total_contributionsLength);
-        System.arraycopy(contributions,0,result,total_contributionsLength,contributionsLength);
-        total_contributions=result;
+              int total_commitsLength=total_commits.length;
+        int commitsLength=commits.length;
+        Commit[] result=new Commit[total_commitsLength+commitsLength];
+        System.arraycopy(total_commits, 0, result, 0, total_commitsLength);
+        System.arraycopy(commits,0,result,total_commitsLength,commitsLength);
+        total_commits=result;
          
 
 
@@ -179,7 +190,7 @@ public class GithubServiceImpl implements GithubService {
 
           }
 
-          return total_contributions;
+          return total_commits;
     }
 
     private static String[] extractOwnerAndRepo(String repoLink) {
