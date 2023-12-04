@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.mdgspace.activityleaderboard.models.Organization;
 import com.mdgspace.activityleaderboard.models.Project;
 import com.mdgspace.activityleaderboard.models.User;
+import com.mdgspace.activityleaderboard.models.roles.OrgRole;
 import com.mdgspace.activityleaderboard.models.roles.ProjectRole;
 import com.mdgspace.activityleaderboard.payload.github.Commit;
 import com.mdgspace.activityleaderboard.payload.github.Committer;
@@ -213,6 +214,60 @@ public class GithubController {
         }
     }
 
+
+
+
+    @GetMapping("/{orgName}/getRanks")
+    public ResponseEntity<?> getRankings(@RequestParam(required=true) Boolean monthly,@PathVariable String orgName, Principal principal){
+      try{
+        Organization org=orgRepository.findByName(orgName).orElse(null);
+        if(org==null){
+          return ResponseEntity.badRequest().body("Organization does not exists");
+         }
+         User user= userRepository.findByUsername(principal.getName()).orElse(null);
+
+         Set<Project> projects= org.getProjects();
+         Set<OrgRole> orgRoles=org.getOrgRoles();
+         
+         Map<String,Map<String,Integer>> res=new HashMap<>();
+
+         for(OrgRole role: orgRoles){
+            Map<String,Integer> memStats=new HashMap<>();
+            User use_r=role.getUser();
+            memStats.put("pulls", 0);
+            memStats.put("issues", 0);
+            memStats.put("commits",0);
+            res.put(use_r.getUsername(),memStats);
+
+         }
+         
+
+         for(Project project:projects){
+            String link=project.getLink();
+            try{
+             PullRequest[] pullRequests=githubService.totalPullRequests(link, user.getAccesstoken(), monthly);
+            for(PullRequest pullRequest:pullRequests){
+            UserObject u_ser=pullRequest.getUser();
+            String username=u_ser.getUsername();
+            if(res.containsKey(username)){
+                Map<String,Integer> stat=res.get(username);
+                stat.put("pulls", stat.get("pulls")+1);
+            }
+
+        }
+            }catch(Exception e){
+                log.error("Github fetch error ", e);
+            }
+         }
+         Map<String, Map<String, Integer>> sortedRes=sortByInnerMapValue(res, "pulls");
+          
+         return ResponseEntity.ok().body(new GetProjectStatsResponse(sortedRes));
+
+
+      }catch(Exception e){
+         return ResponseEntity.internalServerError().body("Internal Server Error");
+      }
+    }
 
         private static Map<String, Map<String, Integer>> sortByInnerMapValue(Map<String, Map<String, Integer>> map, String sortByKey) {
         List<Map.Entry<String, Map<String, Integer>>> entryList = new ArrayList<>(map.entrySet());
