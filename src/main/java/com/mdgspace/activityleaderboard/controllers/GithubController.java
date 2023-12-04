@@ -1,8 +1,12 @@
 package com.mdgspace.activityleaderboard.controllers;
 
 import java.security.Principal;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -26,6 +30,7 @@ import com.mdgspace.activityleaderboard.payload.github.Committer;
 import com.mdgspace.activityleaderboard.payload.github.Issue;
 import com.mdgspace.activityleaderboard.payload.github.PullRequest;
 import com.mdgspace.activityleaderboard.payload.github.UserObject;
+import com.mdgspace.activityleaderboard.payload.response.GetProjectStatsResponse;
 import com.mdgspace.activityleaderboard.payload.response.ProjectStatsResponse;
 import com.mdgspace.activityleaderboard.repository.OrgRepository;
 import com.mdgspace.activityleaderboard.repository.OrgRoleRepository;
@@ -67,7 +72,7 @@ public class GithubController {
     @GetMapping("/{orgName}")
     public ResponseEntity<?> getOrgStatus(@PathVariable String orgName,@RequestParam(required = true) Boolean monthly, Principal principal){
      try{
-          Organization org=orgRepository.findByName(orgName).orElse(null);
+        Organization org=orgRepository.findByName(orgName).orElse(null);
        if(org==null){
         return ResponseEntity.badRequest().body("Organization does not exists");
        }
@@ -134,6 +139,101 @@ public class GithubController {
         return ResponseEntity.internalServerError().body("Internal Server Error");
      }
     }
+
+    @GetMapping("/{orgName}/{projectName}")
+    public ResponseEntity<?> getProjectStats(@PathVariable String orgName, @PathVariable String projectName, @RequestParam(required = true) Boolean monthly, Principal principal){
+        try{
+        Organization org=orgRepository.findByName(orgName).orElse(null);
+        if(org==null){
+          return ResponseEntity.badRequest().body("Organization does not exists");
+         }
+         User user= userRepository.findByUsername(principal.getName()).orElse(null);
+         Project project=projectRepository.findByNameAndOrganization(projectName, org).orElse(null);
+         if(project==null){
+            return ResponseEntity.badRequest().body("Project in this organisation do not exists");
+         }
+         Map<String,Map<String,Integer>> res=new HashMap<>();
+         Set<ProjectRole> projectRoles=project.getProjectRoles();
+         for(ProjectRole role:projectRoles){
+            Map<String,Integer> memStats=new HashMap<>();
+            User use_r=role.getUser();
+            memStats.put("pulls", 0);
+            memStats.put("issues", 0);
+            memStats.put("commits",0);
+            res.put(use_r.getUsername(),memStats);
+
+         }
+         String link=project.getLink();
+
+         try{
+        PullRequest[] pullRequests=githubService.totalPullRequests(link, user.getAccesstoken(), monthly);
+        Issue[] totalIssues=githubService.totalIssues(link, user.getAccesstoken(), monthly);
+        Commit[] totalCommits= githubService.totalCommits(link, user.getAccesstoken(), monthly);
+        for(PullRequest pullRequest:pullRequests){
+            UserObject u_ser=pullRequest.getUser();
+            String username=u_ser.getUsername();
+            if(res.containsKey(username)){
+                Map<String,Integer> stat=res.get(username);
+                stat.put("pulls", stat.get("pulls")+1);
+            }
+        }
+
+        for(Issue issue: totalIssues){
+            UserObject u_ser=issue.getUser();
+            String username=u_ser.getUsername();
+            if(res.containsKey(username)){
+                Map<String,Integer> stat=res.get(username);
+                stat.put("issues", stat.get("issues")+1);
+
+            }
+        }
+        for(Commit commit:totalCommits){
+            Committer committer=commit.getCommitter();
+            String username=committer.getUsername();
+            if(res.containsKey(username)){
+                Map<String,Integer> stat=res.get(username);
+                stat.put("commits", stat.get("commits")+1);
+            }
+        }
+        
+          
+         }catch(Exception e){
+            log.error("Github fetch error: ", e);
+         }
+         
+          Map<String, Map<String, Integer>> sortedRes=sortByInnerMapValue(res, "pulls");
+          
+         return ResponseEntity.ok().body(new GetProjectStatsResponse(sortedRes));
+         
+
+
+        }catch(Exception e){
+           log.error("Internal Server Error ", e);
+           return ResponseEntity.internalServerError().body("Internal Server Error");
+        }
+    }
+
+
+        private static Map<String, Map<String, Integer>> sortByInnerMapValue(Map<String, Map<String, Integer>> map, String sortByKey) {
+        List<Map.Entry<String, Map<String, Integer>>> entryList = new ArrayList<>(map.entrySet());
+
+        // Comparator to compare entries based on the specified key in the inner map
+        Comparator<Map.Entry<String, Map<String, Integer>>> valueComparator =
+                Comparator.comparingInt(entry -> entry.getValue().get(sortByKey));
+
+        // Sort the list of entries
+        entryList.sort(valueComparator);
+
+        // Create a LinkedHashMap to preserve the order
+        Map<String, Map<String, Integer>> sortedMap = new LinkedHashMap<>();
+        for (Map.Entry<String, Map<String, Integer>> entry : entryList) {
+            sortedMap.put(entry.getKey(), entry.getValue());
+        }
+
+        return sortedMap;
+    }
+
+    
 
 
 }
