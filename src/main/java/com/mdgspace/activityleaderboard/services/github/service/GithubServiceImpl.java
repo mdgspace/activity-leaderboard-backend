@@ -157,7 +157,7 @@ public class GithubServiceImpl implements GithubService {
     }
        
     @Override
-    public Commit[] contributorsStats(String link, String accessToken, Boolean month){
+    public Commit[] totalCommits(String link, String accessToken, Boolean month){
           String[] ownerAndRepo=extractOwnerAndRepo(link);
           Commit[] total_commits={};
           String url="";

@@ -14,6 +14,6 @@ public interface GithubService {
     public Issue[] totalIssues(String link,String accessToken, Boolean month);
 
 
-    public Commit[]  contributorsStats(String repolink, String accessToken,Boolean month);
+    public Commit[]  totalCommits(String repolink, String accessToken,Boolean month);
 
 } 
