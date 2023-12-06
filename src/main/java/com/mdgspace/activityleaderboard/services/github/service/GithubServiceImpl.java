@@ -6,6 +6,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import com.mdgspace.activityleaderboard.payload.github.Commit;
@@ -22,6 +23,7 @@ import java.time.LocalTime;
 import java.time.temporal.TemporalAdjusters;
 
 @Slf4j
+@Service
 public class GithubServiceImpl implements GithubService {
 
     

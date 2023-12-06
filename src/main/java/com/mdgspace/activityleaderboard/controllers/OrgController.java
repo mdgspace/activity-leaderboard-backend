@@ -110,8 +110,9 @@ public class OrgController {
             if(orgRole.getRole()!=EOrgRole.ADMIN){
                 return ResponseEntity.badRequest().body("User is not the admin of the organization");
             }
-            orgRepository.deleteById(org.getId());
             orgRoleRepository.deleteById(orgRole.getId());
+            orgRepository.deleteById(org.getId());
+            
             return ResponseEntity.ok().body("Organization deleted successfully");
             
             
@@ -123,11 +124,11 @@ public class OrgController {
 
 
     @PutMapping("/update/{orgName}")
-    public ResponseEntity<?> updateOrg(@PathVariable String orgName,@Valid @RequestBody AddOrgRequest updateOrgRequest, Principal principal){
+    public ResponseEntity<?> updateOrg(@Valid @RequestBody AddOrgRequest updateOrgRequest,@PathVariable String orgName, Principal principal){
        try{
             String username = principal.getName();
             User user= userRepository.findByUsername(username).orElse(null);
-            Organization org= orgRepository.findByName(updateOrgRequest.getName()).orElse(null);
+            Organization org= orgRepository.findByName(orgName).orElse(null);
             if(org==null){
                 return ResponseEntity.badRequest().body("Organization do not exist");
             }
@@ -140,7 +141,7 @@ public class OrgController {
             }
             org.setName(updateOrgRequest.getName());
             org.setDescription(updateOrgRequest.getDescription());
-            return ResponseEntity.badRequest().body("Organization data updated successfully");
+            return ResponseEntity.ok().body("Organization data updated successfully");
 
        }catch (Exception e){
            log.error("Internal server error", e);
