@@ -43,7 +43,6 @@ import jakarta.validation.Valid;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
-
 @RequestMapping("/api/protected/user")
 public class UserController {
      private static final Logger logger = LoggerFactory.getLogger(UserController.class);
@@ -103,6 +102,7 @@ public class UserController {
                for (Map.Entry<String, Boolean> e : newStatus.entrySet()) {
                     String org_name = e.getKey();
                     Boolean status = e.getValue();
+                    System.out.println(status+";;;;;;");
                     Organization org=orgRepository.findByName(org_name).orElse(null);
                     if(org==null){
                          continue;
