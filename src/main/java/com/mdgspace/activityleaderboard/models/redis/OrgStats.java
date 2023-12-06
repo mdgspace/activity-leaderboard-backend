@@ -15,8 +15,8 @@ import lombok.Data;
 public class OrgStats {
     
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private String id;
     
     private Organization organization;
 

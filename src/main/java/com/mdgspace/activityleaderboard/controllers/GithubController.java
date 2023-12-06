@@ -95,6 +95,7 @@ public class GithubController {
             }
             User user = userRepository.findByUsername(principal.getName()).orElse(null);
             OrgStats orgStats = orgStatsRepository.findByOrganizationAndMonthly(org, monthly).orElse(null);
+            
             if(orgStats != null && Instant.now().toEpochMilli() - orgStats.getTime() <= 60000){
                return ResponseEntity.ok().body(orgStats.getResponse());
             }

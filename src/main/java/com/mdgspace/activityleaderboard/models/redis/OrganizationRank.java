@@ -21,8 +21,8 @@ import lombok.Data;
 public class OrganizationRank implements Serializable{
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private String id;
 
     private Organization organization;
 

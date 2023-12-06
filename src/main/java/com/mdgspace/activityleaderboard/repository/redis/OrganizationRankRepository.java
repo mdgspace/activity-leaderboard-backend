@@ -12,6 +12,6 @@ import com.mdgspace.activityleaderboard.models.Organization;
 
 
 @Repository
-public  interface OrganizationRankRepository extends JpaRepository<OrganizationRank,Long>  {
+public  interface OrganizationRankRepository extends JpaRepository<OrganizationRank, String>  {
      Optional<OrganizationRank>  findByOrganizationAndMonthly(Organization organization, Boolean monthly);
 }

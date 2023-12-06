@@ -9,7 +9,7 @@ import com.mdgspace.activityleaderboard.models.Organization;
 import com.mdgspace.activityleaderboard.models.redis.OrgStats;
 
 @Repository
-public interface OrgStatsRepository extends JpaRepository<Long,OrgStats> {
+public interface OrgStatsRepository extends JpaRepository<OrgStats, String> {
    Optional<OrgStats> findByOrganizationAndMonthly(Organization organization, Boolean monthly);
     
 } 

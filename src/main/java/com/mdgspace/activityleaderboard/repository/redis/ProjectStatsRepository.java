@@ -10,6 +10,6 @@ import com.mdgspace.activityleaderboard.models.Project;
 import com.mdgspace.activityleaderboard.models.redis.ProjectStats;
 
 @Repository
-public interface ProjectStatsRepository extends JpaRepository<Long , ProjectStats>{
+public interface ProjectStatsRepository extends JpaRepository<ProjectStats ,String>{
     Optional<ProjectStats> findfindByOrganizationAndProjectAndMonthly(Organization organization,Project project, Boolean monthly);
 }
