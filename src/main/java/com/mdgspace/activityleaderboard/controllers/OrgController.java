@@ -119,7 +119,7 @@ public class OrgController {
                 projectRoleRepository.deleteByProject(project);
             }
             projectRepository.deleteByOrganization(org);
-            orgRoleRepository.dedeleteByOrganization(org);
+            orgRoleRepository.deleteByOrganization(org);
             orgRepository.deleteById(org.getId());
             
             return ResponseEntity.ok().body("Organization deleted successfully");
