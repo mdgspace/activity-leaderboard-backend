@@ -14,6 +14,7 @@ public interface ProjectRoleRepository extends JpaRepository<ProjectRole,Long> {
     Optional<ProjectRole> findByProjectAndUser(Project project,User user);
     void deleteByProjectAndUser(Project project,User user);
     List<ProjectRole> findByUser(User user);
-    void deldeleteByProject(Project project);
+    void deleteByProject(Project project);
+    
 
 }

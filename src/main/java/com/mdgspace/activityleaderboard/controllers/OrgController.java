@@ -25,6 +25,7 @@ import com.mdgspace.activityleaderboard.models.Project;
 import com.mdgspace.activityleaderboard.models.User;
 import com.mdgspace.activityleaderboard.models.enums.EOrgRole;
 import com.mdgspace.activityleaderboard.models.roles.OrgRole;
+import com.mdgspace.activityleaderboard.models.roles.ProjectRole;
 import com.mdgspace.activityleaderboard.payload.request.AddMembersRequest;
 import com.mdgspace.activityleaderboard.payload.request.AddOrgRequest;
 import com.mdgspace.activityleaderboard.payload.request.ChangeOrgMembersStatusRequest;
@@ -115,7 +116,7 @@ public class OrgController {
             }
             Set<Project> projects=org.getProjects();
             for(Project project: projects){
-                projectRoleRepository.deldeleteByProject(project);
+                projectRoleRepository.deleteByProject(project);
             }
             projectRepository.deleteByOrganization(org);
             orgRoleRepository.dedeleteByOrganization(org);
@@ -234,8 +235,16 @@ public class OrgController {
                 if(remove_memberOrgRole==null){
                     continue;
                 }
+                
+                Set<Project> projects= org.getProjects();
+                for(Project project:projects){
+                    ProjectRole projectRole=projectRoleRepository.findByProjectAndUser(project, user).orElse(null);
+                    if(projectRole!=null){
+                        projectRoleRepository.deleteById(projectRole.getId());
+                    }
+                }
                
-                orgRoleRepository.deleteById(remove_memberOrgRole.getId());;
+                orgRoleRepository.deleteById(remove_memberOrgRole.getId());
                 membersRemoved.add(member);
 
             }

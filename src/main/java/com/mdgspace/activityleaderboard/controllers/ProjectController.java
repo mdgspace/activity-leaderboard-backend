@@ -145,7 +145,7 @@ public class ProjectController {
       }
 
       
-      projectRoleRepository.deldeleteByProject(project);
+      projectRoleRepository.deleteByProject(project);
       projectRepository.deleteById(project.getId());
       return ResponseEntity.ok().body(new MessageResponse("Project deleted successfully"));
 
