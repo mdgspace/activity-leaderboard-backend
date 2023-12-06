@@ -255,34 +255,39 @@ public class OrgController {
         if(userOrgRole.getRole()!=EOrgRole.ADMIN){
             return ResponseEntity.badRequest().body("User is not the admin of the organization");
         }
-        System.out.println(changeOrgMembersStatusRequest.getOrgMembersStatus()+";;;;;;;;;;;;;;;;;;;;;");
         Map<String,String> newStatus=changeOrgMembersStatusRequest.getOrgMembersStatus();
         for(Map.Entry<String, String> e: newStatus.entrySet()){
            String memberUsername=e.getKey();
-           System.out.println(memberUsername+";;;;;;;;;;;");
+          
            String newRole=e.getValue().toLowerCase();
-           System.out.println(newRole+"llllllllll");
+           
            if(memberUsername==username){
             continue;
            }
+
            User member=userRepository.findByUsername(memberUsername).orElse(user);
            if(member==null){
             continue;
            }
+
            OrgRole memberOrgRole=orgRoleRepository.findByOrganizationAndUser(org, member).orElse(null);
+           
+
            if(memberOrgRole==null){
             continue;
            }
-           if(newRole=="admin"){
+          
+           if(newRole.equals("admin")){
             memberOrgRole.setRole(EOrgRole.ADMIN);
            }
-           else if(newRole=="manager"){
-            System.out.println("hello");
+           else if(newRole.equals("manager")){
             memberOrgRole.setRole(EOrgRole.MANAGER);
            }
-           else if(newRole=="member"){
+           else if(newRole.equals("member")){
+            
             memberOrgRole.setRole(EOrgRole.MEMBER);
            }
+           orgRoleRepository.save(memberOrgRole);
            
         }
 
