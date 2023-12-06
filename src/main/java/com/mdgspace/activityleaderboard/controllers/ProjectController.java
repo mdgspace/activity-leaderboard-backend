@@ -284,7 +284,7 @@ public class ProjectController {
           continue;
         }
         
-        projectRoleRepository.deleteById(projectMemberOrgRole.getId());
+        projectRoleRepository.delete(projectMemberProjectRole);
         membersRemoved.add(member);
 
     }

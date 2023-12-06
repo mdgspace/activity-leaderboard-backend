@@ -11,5 +11,5 @@ import lombok.Data;
 @Builder
 public class AddMembersResponse {
     
-    private Set<String> newMembersAdded;
+    private Set<String> membersAddedOrRemoved;
 }
