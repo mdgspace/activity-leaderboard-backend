@@ -284,7 +284,7 @@ public class OrgController {
             memberOrgRole.setRole(EOrgRole.MANAGER);
            }
            else if(newRole.equals("member")){
-            
+
             memberOrgRole.setRole(EOrgRole.MEMBER);
            }
            orgRoleRepository.save(memberOrgRole);
@@ -306,9 +306,11 @@ public class OrgController {
      try{
 
         Organization org= orgRepository.findByName(orgName).orElse(null);
+
         if(org==null){
             return ResponseEntity.badRequest().body("Organization does not exist");
         }
+
         String username=principal.getName();
         User user=userRepository.findByUsername(username).orElse(null);
         OrgRole orgRole=orgRoleRepository.findByOrganizationAndUser(org, user).orElse(null);
@@ -329,6 +331,7 @@ public class OrgController {
                 continue;
             }
             project.setArcheive(status);
+            projectRepository.save(project);
 
         }
 

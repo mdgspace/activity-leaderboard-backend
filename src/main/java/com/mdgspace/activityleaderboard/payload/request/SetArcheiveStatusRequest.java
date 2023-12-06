@@ -12,4 +12,12 @@ import lombok.Data;
 public class SetArcheiveStatusRequest {
     
     private Map<String , Boolean> archeiveStatus;
+
+    public  Map<String, Boolean> getArcheiveStatus(){
+        return archeiveStatus;
+    }
+
+    public void setArcheiveStatus(Map<String, Boolean> archieveStatus){
+        this.archeiveStatus=archieveStatus;
+    }
 }
