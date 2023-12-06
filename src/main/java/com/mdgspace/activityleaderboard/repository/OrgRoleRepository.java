@@ -15,5 +15,5 @@ import java.util.List;
 public interface OrgRoleRepository extends JpaRepository<OrgRole,Long>{
     Optional<OrgRole> findByOrganizationAndUser(Organization organization, User user);
     List<OrgRole> findByUser(User user);
-    
+    void dedeleteByOrganization(Organization organization);
 }

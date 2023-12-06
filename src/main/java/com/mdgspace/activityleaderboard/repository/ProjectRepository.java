@@ -23,6 +23,8 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
 
     Boolean deleteByNameAndOrganization(String name, Organization organization);
 
+    void deleteByOrganization(Organization organization);
+
    
 
 }

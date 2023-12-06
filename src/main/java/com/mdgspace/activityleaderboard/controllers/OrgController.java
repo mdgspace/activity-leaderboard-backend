@@ -102,6 +102,9 @@ public class OrgController {
             }
 
             String username= principal.getName();
+            if(orgName.equals(username+"/userspace")){
+                return ResponseEntity.badRequest().body("Can'not delete userspace");
+            }
             User user=userRepository.findByUsername(username).orElse(null);
             OrgRole orgRole=orgRoleRepository.findByOrganizationAndUser(org, user).orElse(null);
             if(orgRole==null){
@@ -110,7 +113,12 @@ public class OrgController {
             if(orgRole.getRole()!=EOrgRole.ADMIN){
                 return ResponseEntity.badRequest().body("User is not the admin of the organization");
             }
-            orgRoleRepository.deleteById(orgRole.getId());
+            Set<Project> projects=org.getProjects();
+            for(Project project: projects){
+                projectRoleRepository.deldeleteByProject(project);
+            }
+            projectRepository.deleteByOrganization(org);
+            orgRoleRepository.dedeleteByOrganization(org);
             orgRepository.deleteById(org.getId());
             
             return ResponseEntity.ok().body("Organization deleted successfully");
