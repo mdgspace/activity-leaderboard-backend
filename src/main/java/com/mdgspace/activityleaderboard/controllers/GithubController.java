@@ -27,6 +27,7 @@ import com.mdgspace.activityleaderboard.models.Organization;
 import com.mdgspace.activityleaderboard.models.Project;
 import com.mdgspace.activityleaderboard.models.User;
 import com.mdgspace.activityleaderboard.models.redis.OrganizationRank;
+import com.mdgspace.activityleaderboard.models.redis.ProjectStats;
 import com.mdgspace.activityleaderboard.models.roles.OrgRole;
 import com.mdgspace.activityleaderboard.models.roles.ProjectRole;
 import com.mdgspace.activityleaderboard.payload.github.Commit;
@@ -42,6 +43,7 @@ import com.mdgspace.activityleaderboard.repository.ProjectRepository;
 import com.mdgspace.activityleaderboard.repository.ProjectRoleRepository;
 import com.mdgspace.activityleaderboard.repository.UserRepository;
 import com.mdgspace.activityleaderboard.repository.redis.OrganizationRankRepository;
+import com.mdgspace.activityleaderboard.repository.redis.ProjectStatsRepository;
 import com.mdgspace.activityleaderboard.services.github.service.GithubService;
 
 import lombok.extern.slf4j.Slf4j;
@@ -73,6 +75,9 @@ public class GithubController {
 
     @Autowired
     OrganizationRankRepository organizationRankRepository;
+
+    @Autowired
+    ProjectStatsRepository projectStatsRepository;
 
     @GetMapping("/{orgName}")
     public ResponseEntity<?> getOrgStatus(@PathVariable String orgName, @RequestParam(required = true) Boolean monthly,
@@ -158,6 +163,78 @@ public class GithubController {
             if (project == null) {
                 return ResponseEntity.badRequest().body("Project in this organisation do not exists");
             }
+
+            ProjectStats projectStats = projectStatsRepository
+                    .findfindByOrganizationAndProjectAndMonthly(org, project, monthly).orElse(null);
+            if (projectStats != null && Instant.now().toEpochMilli() - projectStats.getTime() >= 60000) {
+                return ResponseEntity.ok().body(projectStats.getResponse());
+            } else if (projectStats != null) {
+                try {
+
+                    Map<String, Map<String, Integer>> res = new HashMap<>();
+                    Set<ProjectRole> projectRoles = project.getProjectRoles();
+                    for (ProjectRole role : projectRoles) {
+                        Map<String, Integer> memStats = new HashMap<>();
+                        User use_r = role.getUser();
+                        memStats.put("pulls", 0);
+                        memStats.put("issues", 0);
+                        memStats.put("commits", 0);
+                        res.put(use_r.getUsername(), memStats);
+
+                    }
+                    String link = project.getLink();
+
+                    try {
+                        PullRequest[] pullRequests = githubService.totalPullRequests(link, user.getAccesstoken(),
+                                monthly);
+                        Issue[] totalIssues = githubService.totalIssues(link, user.getAccesstoken(), monthly);
+                        Commit[] totalCommits = githubService.totalCommits(link, user.getAccesstoken(), monthly);
+                        for (PullRequest pullRequest : pullRequests) {
+                            UserObject u_ser = pullRequest.getUser();
+                            String username = u_ser.getUsername();
+                            if (res.containsKey(username)) {
+                                Map<String, Integer> stat = res.get(username);
+                                stat.put("pulls", stat.get("pulls") + 1);
+                            }
+                        }
+
+                        for (Issue issue : totalIssues) {
+                            UserObject u_ser = issue.getUser();
+                            String username = u_ser.getUsername();
+                            if (res.containsKey(username)) {
+                                Map<String, Integer> stat = res.get(username);
+                                stat.put("issues", stat.get("issues") + 1);
+
+                            }
+                        }
+                        for (Commit commit : totalCommits) {
+                            Committer committer = commit.getCommitter();
+                            String username = committer.getUsername();
+                            if (res.containsKey(username)) {
+                                Map<String, Integer> stat = res.get(username);
+                                stat.put("commits", stat.get("commits") + 1);
+                            }
+                        }
+
+                    } catch (Exception e) {
+                        log.error("Github fetch error: ", e);
+                    }
+                    Map<String, Map<String, Integer>> sortedRes = sortByInnerMapValue(res, "pulls");
+                    long unixTimeMillis = Instant.now().toEpochMilli();
+                    ProjectStats project_stats= new ProjectStats(org,project,  new GetProjectStatsResponse(sortedRes),monthly , unixTimeMillis);
+                    projectStatsRepository.save(project_stats);
+                     
+                   
+                } catch (Exception e) {
+                    log.error("Thread Error", e);
+                }
+
+                return ResponseEntity.ok().body(projectStats.getResponse());
+                 
+                 
+
+            }
+
             Map<String, Map<String, Integer>> res = new HashMap<>();
             Set<ProjectRole> projectRoles = project.getProjectRoles();
             for (ProjectRole role : projectRoles) {
@@ -207,7 +284,9 @@ public class GithubController {
             }
 
             Map<String, Map<String, Integer>> sortedRes = sortByInnerMapValue(res, "pulls");
-
+              
+            ProjectStats projectStats2=new ProjectStats(org, project, new GetProjectStatsResponse(sortedRes), monthly, Instant.now().toEpochMilli());
+            projectStatsRepository.save(projectStats2);
             return ResponseEntity.ok().body(new GetProjectStatsResponse(sortedRes));
 
         } catch (Exception e) {
@@ -235,49 +314,51 @@ public class GithubController {
             } else if (organizationRank != null) {
                 ExecutorService executorService = Executors.newFixedThreadPool(1);
                 executorService.submit(() -> {
-                    try{
-                          Set<Project> projects = org.getProjects();
-                    Set<OrgRole> orgRoles = org.getOrgRoles();
+                    try {
+                        Set<Project> projects = org.getProjects();
+                        Set<OrgRole> orgRoles = org.getOrgRoles();
 
-                    Map<String, Map<String, Integer>> res = new HashMap<>();
+                        Map<String, Map<String, Integer>> res = new HashMap<>();
 
-                    for (OrgRole role : orgRoles) {
-                        Map<String, Integer> memStats = new HashMap<>();
-                        User use_r = role.getUser();
-                        memStats.put("pulls", 0);
-                        memStats.put("issues", 0);
-                        memStats.put("commits", 0);
-                        res.put(use_r.getUsername(), memStats);
+                        for (OrgRole role : orgRoles) {
+                            Map<String, Integer> memStats = new HashMap<>();
+                            User use_r = role.getUser();
+                            memStats.put("pulls", 0);
+                            memStats.put("issues", 0);
+                            memStats.put("commits", 0);
+                            res.put(use_r.getUsername(), memStats);
 
-                    }
-
-                    for (Project project : projects) {
-                        String link = project.getLink();
-                        try {
-                            PullRequest[] pullRequests = githubService.totalPullRequests(link, user.getAccesstoken(),
-                                    monthly);
-                            for (PullRequest pullRequest : pullRequests) {
-                                UserObject u_ser = pullRequest.getUser();
-                                String username = u_ser.getUsername();
-                                if (res.containsKey(username)) {
-                                    Map<String, Integer> stat = res.get(username);
-                                    stat.put("pulls", stat.get("pulls") + 1);
-                                }
-
-                            }
-                        } catch (Exception e) {
-                            log.error("Github fetch error ", e);
                         }
-                    }
-                    Map<String, Map<String, Integer>> sortedRes = sortByInnerMapValue(res, "pulls");
-                    OrganizationRank orgRankRedis = new OrganizationRank(org, new GetProjectStatsResponse(sortedRes),
-                            monthly, Instant.now().toEpochMilli());
-                    organizationRankRepository.save(orgRankRedis);
 
-                }catch(Exception e){
-                    log.error("Thread Exception ", e);
-                }
-                    
+                        for (Project project : projects) {
+                            String link = project.getLink();
+                            try {
+                                PullRequest[] pullRequests = githubService.totalPullRequests(link,
+                                        user.getAccesstoken(),
+                                        monthly);
+                                for (PullRequest pullRequest : pullRequests) {
+                                    UserObject u_ser = pullRequest.getUser();
+                                    String username = u_ser.getUsername();
+                                    if (res.containsKey(username)) {
+                                        Map<String, Integer> stat = res.get(username);
+                                        stat.put("pulls", stat.get("pulls") + 1);
+                                    }
+
+                                }
+                            } catch (Exception e) {
+                                log.error("Github fetch error ", e);
+                            }
+                        }
+                        Map<String, Map<String, Integer>> sortedRes = sortByInnerMapValue(res, "pulls");
+                        OrganizationRank orgRankRedis = new OrganizationRank(org,
+                                new GetProjectStatsResponse(sortedRes),
+                                monthly, Instant.now().toEpochMilli());
+                        organizationRankRepository.save(orgRankRedis);
+
+                    } catch (Exception e) {
+                        log.error("Thread Exception ", e);
+                    }
+
                 });
 
                 executorService.shutdown();
@@ -285,7 +366,6 @@ public class GithubController {
                 return ResponseEntity.ok().body(organizationRank.getResponse());
 
             }
-
 
             Set<Project> projects = org.getProjects();
             Set<OrgRole> orgRoles = org.getOrgRoles();
@@ -320,9 +400,9 @@ public class GithubController {
                 }
             }
             Map<String, Map<String, Integer>> sortedRes = sortByInnerMapValue(res, "pulls");
-              OrganizationRank orgRankRedis = new OrganizationRank(org, new GetProjectStatsResponse(sortedRes),
-                            monthly, Instant.now().toEpochMilli());
-                    organizationRankRepository.save(orgRankRedis);
+            OrganizationRank orgRankRedis = new OrganizationRank(org, new GetProjectStatsResponse(sortedRes),
+                    monthly, Instant.now().toEpochMilli());
+            organizationRankRepository.save(orgRankRedis);
 
             return ResponseEntity.ok().body(new GetProjectStatsResponse(sortedRes));
 
