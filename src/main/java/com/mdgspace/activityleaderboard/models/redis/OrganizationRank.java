@@ -1,7 +1,8 @@
 package com.mdgspace.activityleaderboard.models.redis;
 
 import java.io.Serializable;
-import java.util.Map;
+
+
 
 import org.springframework.data.redis.core.RedisHash;
 
@@ -11,8 +12,6 @@ import com.mdgspace.activityleaderboard.payload.response.GetProjectStatsResponse
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 
 

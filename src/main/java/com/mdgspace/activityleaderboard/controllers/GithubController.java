@@ -38,7 +38,6 @@ import com.mdgspace.activityleaderboard.payload.github.PullRequest;
 import com.mdgspace.activityleaderboard.payload.github.UserObject;
 import com.mdgspace.activityleaderboard.payload.response.GetOrgStatsResponse;
 import com.mdgspace.activityleaderboard.payload.response.GetProjectStatsResponse;
-import com.mdgspace.activityleaderboard.payload.response.ProjectStatsResponse;
 import com.mdgspace.activityleaderboard.repository.OrgRepository;
 import com.mdgspace.activityleaderboard.repository.OrgRoleRepository;
 import com.mdgspace.activityleaderboard.repository.ProjectRepository;

@@ -4,7 +4,6 @@ import java.security.Principal;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 
 import org.slf4j.Logger;
@@ -39,9 +38,8 @@ import com.mdgspace.activityleaderboard.repository.OrgRoleRepository;
 import com.mdgspace.activityleaderboard.repository.ProjectRepository;
 import com.mdgspace.activityleaderboard.repository.ProjectRoleRepository;
 import com.mdgspace.activityleaderboard.repository.UserRepository;
-import com.mdgspace.activityleaderboard.security.jwt.AuthEntryPointJwt;
 import com.mdgspace.activityleaderboard.services.github.service.GithubService;
-import com.mdgspace.activityleaderboard.services.github.service.GithubServiceImpl;
+
 
 import io.netty.handler.codec.MessageAggregationException;
 import jakarta.validation.Valid;

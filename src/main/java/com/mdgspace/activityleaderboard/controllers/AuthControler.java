@@ -31,7 +31,6 @@ import com.mdgspace.activityleaderboard.payload.github.Accesstoken;
 import com.mdgspace.activityleaderboard.payload.github.GithubUser;
 import com.mdgspace.activityleaderboard.payload.request.LoginRequest;
 import com.mdgspace.activityleaderboard.payload.response.JwtResponse;
-import com.mdgspace.activityleaderboard.payload.response.MessageResponse;
 import com.mdgspace.activityleaderboard.repository.OrgRepository;
 import com.mdgspace.activityleaderboard.repository.OrgRoleRepository;
 import com.mdgspace.activityleaderboard.repository.UserRepository;

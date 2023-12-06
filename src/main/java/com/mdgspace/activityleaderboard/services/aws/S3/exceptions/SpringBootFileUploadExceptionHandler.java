@@ -3,13 +3,11 @@ package com.mdgspace.activityleaderboard.services.aws.S3.exceptions;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
-import org.springframework.http.HttpHeaders;
+
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.multipart.MultipartException;
 import org.springframework.web.reactive.result.method.annotation.ResponseEntityExceptionHandler;
 import org.springframework.web.server.ServerWebExchange;
@@ -18,7 +16,7 @@ import com.amazonaws.AmazonServiceException;
 import com.amazonaws.SdkClientException;
 
 import lombok.extern.slf4j.Slf4j;
-import reactor.core.publisher.Mono;
+
 
 @ControllerAdvice
 @Slf4j

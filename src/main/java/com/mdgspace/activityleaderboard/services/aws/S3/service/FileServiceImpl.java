@@ -6,7 +6,6 @@ import com.mdgspace.activityleaderboard.services.aws.S3.exceptions.FileDownloadE
 
 // import com.ehizman.springboot_file_upload.exceptions.FileDownloadException;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FilenameUtils;
 
 
@@ -30,7 +29,6 @@ import java.util.List;
 
 
 @Service
-@Slf4j
 @RequiredArgsConstructor
 public class FileServiceImpl implements FileService{
 

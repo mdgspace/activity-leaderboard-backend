@@ -1,7 +1,7 @@
 package com.mdgspace.activityleaderboard.payload.response;
 
 import java.util.Map;
-import java.util.Set;
+
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

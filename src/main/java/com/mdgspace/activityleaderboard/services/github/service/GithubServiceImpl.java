@@ -96,7 +96,7 @@ public class GithubServiceImpl implements GithubService {
 
 
       if(month){
-        List<PullRequest> res= new ArrayList();
+        List<PullRequest> res= new ArrayList<>();
         LocalDateTime dateToComp= getFirstDayOfMonthAtMidnight();
         for(PullRequest pullRequest:total_pull){
            if(dateToComp.isBefore(pullRequest.getCreated_at())|| dateToComp.isEqual(pullRequest.getCreated_at()) || dateToComp.isEqual(pullRequest.getUpdated_at()) || dateToComp.isBefore(pullRequest.getUpdated_at())){
@@ -105,7 +105,7 @@ public class GithubServiceImpl implements GithubService {
         }
         total_pull=res.toArray(new PullRequest[0]);
       }else{
-          List<PullRequest> res= new ArrayList();
+          List<PullRequest> res= new ArrayList<>();
         LocalDateTime dateToComp= getPastMonday();
         for(PullRequest pullRequest:total_pull){
            if(dateToComp.isBefore(pullRequest.getCreated_at())|| dateToComp.isEqual(pullRequest.getCreated_at()) || dateToComp.isEqual(pullRequest.getUpdated_at()) || dateToComp.isBefore(pullRequest.getUpdated_at())){

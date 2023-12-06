@@ -1,8 +1,6 @@
 package com.mdgspace.activityleaderboard.controllers;
 
 import java.security.Principal;
-import java.util.Optional;
-import java.util.Set;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,11 +8,7 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.method.P;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -41,11 +35,11 @@ import com.mdgspace.activityleaderboard.repository.OrgRoleRepository;
 import com.mdgspace.activityleaderboard.repository.ProjectRepository;
 import com.mdgspace.activityleaderboard.repository.ProjectRoleRepository;
 import com.mdgspace.activityleaderboard.repository.UserRepository;
-import com.mdgspace.activityleaderboard.security.jwt.AuthEntryPointJwt;
+
 
 import jakarta.validation.Valid;
 
-import org.springframework.web.bind.annotation.RequestParam;
+
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
