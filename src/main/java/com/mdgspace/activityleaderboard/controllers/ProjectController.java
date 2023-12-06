@@ -136,11 +136,7 @@ public class ProjectController {
         return ResponseEntity.badRequest().body(new MessageResponse("This organisation doesnot exists"));
       }
       Project project = projectRepository.findByNameAndOrganization(projectName, org).orElse(null);
-      if (project == null) {
-        return ResponseEntity.badRequest()
-            .body(new MessageResponse("This projectName does not exists in this organization"));
-      }
-
+      
       OrgRole orgRole = orgRoleRepository.findByOrganizationAndUser(org, user).orElse(null);
 
       if (orgRole.getRole() != EOrgRole.ADMIN && orgRole.getRole() != EOrgRole.MANAGER) {
@@ -149,13 +145,7 @@ public class ProjectController {
       }
 
       
-
-      ProjectRole projectRole = projectRoleRepository.findByProjectAndUser(project, user).orElse(null);
-
-      if (projectRole == null) {
-        return ResponseEntity.badRequest().body("Project in this org doesnot exists");
-      }
-      projectRoleRepository.deleteById(projectRole.getId());
+      projectRoleRepository.deldeleteByProject(project);
       projectRepository.deleteById(project.getId());
       return ResponseEntity.ok().body(new MessageResponse("Project deleted successfully"));
 
