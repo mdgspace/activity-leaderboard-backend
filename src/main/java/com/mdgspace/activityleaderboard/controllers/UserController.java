@@ -112,6 +112,7 @@ public class UserController {
                          continue;
                     }
                     orgRole.setBookmarked(status);  
+                    orgRoleRepository.save(orgRole);
 
                }
 
@@ -144,7 +145,8 @@ public class UserController {
                     if(orgRole==null){
                          continue;
                     }
-                    orgRole.setArcheive(status);;  
+                    orgRole.setArcheive(status);
+                    orgRoleRepository.save(orgRole);
 
                }
 

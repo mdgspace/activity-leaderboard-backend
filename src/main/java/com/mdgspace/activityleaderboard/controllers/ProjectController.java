@@ -109,7 +109,7 @@ public class ProjectController {
 
       projectRepository.save(new_Project);
 
-      if (org.getName() == username + "/userspace") {
+      if (org.getName().equals(username + "/userspace")) {
 
         ProjectRole projectRole = new ProjectRole(EProjectRole.ADMIN, new_Project, user);
         projectRoleRepository.save(projectRole);
@@ -148,7 +148,7 @@ public class ProjectController {
             .body(new MessageResponse("User is not the admin or manager of organization"));
       }
 
-      projectRepository.deleteById(project.getId());
+      
 
       ProjectRole projectRole = projectRoleRepository.findByProjectAndUser(project, user).orElse(null);
 
@@ -156,6 +156,7 @@ public class ProjectController {
         return ResponseEntity.badRequest().body("Project in this org doesnot exists");
       }
       projectRoleRepository.deleteById(projectRole.getId());
+      projectRepository.deleteById(project.getId());
       return ResponseEntity.ok().body(new MessageResponse("Project deleted successfully"));
 
     } catch (Exception e) {
@@ -189,6 +190,7 @@ public class ProjectController {
       project.setName(updateProjectRequest.getName());
       project.setDescription(updateProjectRequest.getDescription());
       project.setLink(updateProjectRequest.getLink());
+      projectRepository.save(project);
 
       return ResponseEntity.ok().body("Project details updated");
 
@@ -339,12 +341,13 @@ public class ProjectController {
            if(projectRole==null){
             continue;
            }
-           if(newRole=="admin"){
+           if(newRole.equals("admin")){
             projectRole.setRole(EProjectRole.ADMIN);;
            }
-           else if(newRole=="member"){
+           else if(newRole.equals("member")){
             projectRole.setRole(EProjectRole.MEMBER);
            }
+           projectRoleRepository.save(projectRole);
            
         }
 

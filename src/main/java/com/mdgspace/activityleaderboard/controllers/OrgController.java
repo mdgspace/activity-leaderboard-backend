@@ -161,7 +161,7 @@ public class OrgController {
                 return ResponseEntity.badRequest().body("Organization do not exist");
             }
             String username=principal.getName();
-            if(orgName==username+"/userSpace"){
+            if(orgName.equals(username+"/userSpace")){
                 return ResponseEntity.badRequest().body("Members cant be added to userSpace");
             }
             User user=userRepository.findByUsername(username).orElse(null);
@@ -215,7 +215,7 @@ public class OrgController {
             }
             Set<String> membersRemoved=new HashSet<>();
             for(String member: removeMembersRequest.getMembers()){
-                if(member==username){
+                if(member.equals(username)){
                     continue;
                 }
                 User remove_member=userRepository.findByUsername(member).orElse(null);
@@ -261,7 +261,7 @@ public class OrgController {
           
            String newRole=e.getValue().toLowerCase();
            
-           if(memberUsername==username){
+           if(memberUsername.equals(username)){
             continue;
            }
 
@@ -371,6 +371,7 @@ public class OrgController {
                 continue;
             }
             project.setBookmarked(status);
+            projectRepository.save(project);
 
         }
 

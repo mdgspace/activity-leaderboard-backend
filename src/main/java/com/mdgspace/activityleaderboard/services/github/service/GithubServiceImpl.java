@@ -49,7 +49,8 @@ public class GithubServiceImpl implements GithubService {
             WebClient.Builder builder= WebClient.builder();
 
            Repository response= builder.build().get().uri(url).header("Accept","application/json").header("Authorization", "Bearer "+acessToken).header("X-GitHub-Api-Version", "2022-11-28").retrieve().bodyToMono(Repository.class).block();
-           if(response!=null&&response.getName()==repo){
+
+           if(response!=null&&repo.equals(response.getName())){
             return true;
            }
           

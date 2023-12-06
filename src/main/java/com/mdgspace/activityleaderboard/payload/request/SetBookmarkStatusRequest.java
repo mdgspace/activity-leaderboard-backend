@@ -4,14 +4,28 @@ package com.mdgspace.activityleaderboard.payload.request;
 
 import java.util.Map;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
 
-@AllArgsConstructor
-@Data
-@Builder
 public class SetBookmarkStatusRequest {
     
     private Map<String , Boolean> bookmarkStatus;
+
+    public SetBookmarkStatusRequest(){
+
+    }
+
+    public SetBookmarkStatusRequest(Map<String , Boolean> bookmarkStatus){
+        this.bookmarkStatus=bookmarkStatus;
+    }
+
+    public Map<String , Boolean> getBookmarkStatus(){
+        return bookmarkStatus;
+    }
+
+
+    public void  setBookMarkStatus(Map<String, Boolean> bookmarkStatus){
+
+        this.bookmarkStatus=bookmarkStatus;
+        
+    }
+
 }

@@ -2,16 +2,19 @@ package com.mdgspace.activityleaderboard.payload.request;
 
 import java.util.Map;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
 
-@AllArgsConstructor
-@Data
-@Builder
+
 public class SetArcheiveStatusRequest {
     
     private Map<String , Boolean> archeiveStatus;
+
+    public SetArcheiveStatusRequest(){
+
+    }
+
+    public SetArcheiveStatusRequest(Map<String , Boolean> archeiveStatus){
+          this.archeiveStatus=archeiveStatus;
+    }
 
     public  Map<String, Boolean> getArcheiveStatus(){
         return archeiveStatus;
