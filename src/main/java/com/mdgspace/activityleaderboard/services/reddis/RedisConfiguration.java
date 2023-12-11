@@ -7,8 +7,12 @@ import org.springframework.data.redis.connection.RedisPassword;
 import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.repository.configuration.EnableRedisRepositories;
+import org.springframework.data.redis.serializer.JdkSerializationRedisSerializer;
+import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 @Configuration
+@EnableRedisRepositories
 public class RedisConfiguration {
     
 
@@ -25,7 +29,9 @@ public class RedisConfiguration {
     JedisConnectionFactory jedisConnectionFactory(){
 
         RedisStandaloneConfiguration redisStandaloneConfiguration = new RedisStandaloneConfiguration(redisHost, redisPort);
-        redisStandaloneConfiguration.setPassword(RedisPassword.of(password));
+        if(password!=null){
+            redisStandaloneConfiguration.setPassword(RedisPassword.of(password));
+        }
         return new JedisConnectionFactory(redisStandaloneConfiguration);
 
     }
@@ -35,6 +41,12 @@ public class RedisConfiguration {
     public RedisTemplate<String, Object> redisTemplate(){
         RedisTemplate<String, Object> template = new RedisTemplate<>();
         template.setConnectionFactory(jedisConnectionFactory());
+        template.setKeySerializer(new StringRedisSerializer());
+        template.setHashKeySerializer(new StringRedisSerializer());
+        template.setHashKeySerializer(new JdkSerializationRedisSerializer());
+        template.setValueSerializer(new JdkSerializationRedisSerializer());
+        template.setEnableTransactionSupport(true);
+        template.afterPropertiesSet();
         return template;
     }
 

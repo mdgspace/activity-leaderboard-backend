@@ -1,5 +1,6 @@
 package com.mdgspace.activityleaderboard.payload.github;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 

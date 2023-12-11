@@ -1,10 +1,11 @@
 package com.mdgspace.activityleaderboard.payload.request;
 
+import java.io.Serializable;
 import java.util.Set;
 
 
 
-public class AddMembersRequest {
+public class AddMembersRequest  {
     
     private Set<String> members;
 

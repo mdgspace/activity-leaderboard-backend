@@ -1,5 +1,6 @@
 package com.mdgspace.activityleaderboard.payload.request;
 
+import java.io.Serializable;
 import java.util.Map;
 
 

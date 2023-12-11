@@ -1,10 +1,11 @@
 package com.mdgspace.activityleaderboard.payload.response;
 
+import java.io.Serializable;
 import java.util.List;
 
 import com.mdgspace.activityleaderboard.models.User;
 
-public class UsersResponse {
+public class UsersResponse  {
 
     private List<User> users;
 

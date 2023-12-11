@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -19,7 +20,7 @@ import com.mdgspace.activityleaderboard.models.roles.ProjectRole;
       @UniqueConstraint(columnNames = "username"),
       @UniqueConstraint(columnNames = "accesstoken")
 })
-public class User {
+public class User implements Serializable{
 
    // Primary key to identify the user.
    @Id

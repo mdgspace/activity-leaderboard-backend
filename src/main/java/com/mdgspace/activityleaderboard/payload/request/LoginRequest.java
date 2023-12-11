@@ -1,5 +1,7 @@
 package com.mdgspace.activityleaderboard.payload.request;
 
+import java.io.Serializable;
+
 import jakarta.validation.constraints.*;
 
 // This class is used by spring boot to deserialize user login request

@@ -1,5 +1,7 @@
 package com.mdgspace.activityleaderboard.models.roles;
 
+import java.io.Serializable;
+
 import com.mdgspace.activityleaderboard.models.Project;
 import com.mdgspace.activityleaderboard.models.User;
 import com.mdgspace.activityleaderboard.models.enums.EProjectRole;
@@ -17,7 +19,7 @@ import jakarta.persistence.ManyToOne;
 
 
 @Entity
-public class ProjectRole {
+public class ProjectRole implements Serializable{
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

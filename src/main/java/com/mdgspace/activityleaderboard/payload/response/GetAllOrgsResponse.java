@@ -1,5 +1,6 @@
 package com.mdgspace.activityleaderboard.payload.response;
 
+import java.io.Serializable;
 import java.util.List;
 
 import com.mdgspace.activityleaderboard.models.Organization;

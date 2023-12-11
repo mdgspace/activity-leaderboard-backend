@@ -1,5 +1,7 @@
 package com.mdgspace.activityleaderboard.payload.response;
 
+import java.io.Serializable;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -7,7 +9,7 @@ import lombok.Data;
 @AllArgsConstructor
 @Data
 @Builder
-public class FileResponse {
+public class FileResponse  {
     private String message;
     private boolean isSuccessful;
     private int statusCode;

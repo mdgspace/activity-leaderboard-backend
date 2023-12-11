@@ -20,6 +20,7 @@ import java.util.Set;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.mdgspace.activityleaderboard.models.roles.OrgRole;
 
+import java.io.Serializable;
 import java.util.HashSet;
 
 
@@ -27,7 +28,7 @@ import java.util.HashSet;
 @Table(name="organizations", uniqueConstraints = {
     @UniqueConstraint(columnNames = "name")
 })
-public class Organization {
+public class Organization implements Serializable{
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

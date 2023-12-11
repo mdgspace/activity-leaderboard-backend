@@ -93,8 +93,19 @@ public class GithubController {
                 return ResponseEntity.badRequest().body("Organization does not exists");
             }
             User user = userRepository.findByUsername(principal.getName()).orElse(null);
-            OrgStats orgStats = orgStatsRepository.findByOrganizationAndMonthly(org, monthly).orElse(null);
+           
+            OrgStats orgStats = null;
+            List<OrgStats> orgStatsList=orgStatsRepository.findAll() ;
+            System.out.println(orgStatsList);
+            System.out.println(";;;;;;;;;;;;;;;;;;;;;;;;;");
             
+            System.out.println(orgStatsList);
+            // for(OrgStats org_stats:orgStatsList){
+            //     if(org_stats.getOrganization().equals(org)&& org_stats.getMonthly()==monthly){
+            //         orgStats=org_stats;
+            //     }
+            // }         
+            System.out.println(";;;;;;;;;;;;;;;;;;;;;;;;;");
             if(orgStats != null && Instant.now().toEpochMilli() - orgStats.getTime() <= 60000){
                return ResponseEntity.ok().body(orgStats.getResponse());
             }
@@ -158,8 +169,9 @@ public class GithubController {
                             res.put(project.getName(), stats);
                         }
 
-                        OrgStats org_stats = new OrgStats(org, new GetOrgStatsResponse(res), monthly,
+                        OrgStats org_stats = new OrgStats(1234,org, new GetOrgStatsResponse(res), monthly,
                                 Instant.now().toEpochMilli());
+                        
                         orgStatsRepository.save(org_stats);
 
                     }
@@ -167,11 +179,13 @@ public class GithubController {
                     log.error("Thread error", e);
                 }
                 executorService.shutdown();
-                return ResponseEntity.ok().body(orgStats.getResponse());
+                return ResponseEntity.ok().body("hello");
               });
             }
             Set<Project> projects = org.getProjects();
+           System.out.println(";;;;;;;;;;;;;;;;;;;;;;;;;");
 
+            // return ResponseEntity.ok().body("hwllp");
             Map<String, Map<String, Integer>> res = new HashMap<>();
             for (Project project : projects) {
                 try {
@@ -225,8 +239,11 @@ public class GithubController {
                 }
 
             }
-            OrgStats org_Stats= new OrgStats(org, new GetOrgStatsResponse(res), monthly, Instant.now().toEpochMilli());
+            System.out.println(";;;;;;;;;;;;;;;;;;;;;;;;;");
+            System.out.println(new GetOrgStatsResponse(res));
+            OrgStats org_Stats= new OrgStats(123,org, new GetOrgStatsResponse(res), monthly, Instant.now().toEpochMilli());
             orgStatsRepository.save(org_Stats);
+            System.out.println(org_Stats);
 
             return ResponseEntity.ok().body(new GetOrgStatsResponse(res));
         } catch (Exception e) {

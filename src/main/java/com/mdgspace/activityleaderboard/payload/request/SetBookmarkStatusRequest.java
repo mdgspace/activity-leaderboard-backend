@@ -2,10 +2,11 @@ package com.mdgspace.activityleaderboard.payload.request;
 
 
 
+import java.io.Serializable;
 import java.util.Map;
 
 
-public class SetBookmarkStatusRequest {
+public class SetBookmarkStatusRequest  {
     
     private Map<String , Boolean> bookmarkStatus;
 

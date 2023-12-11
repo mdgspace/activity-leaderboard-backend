@@ -72,53 +72,48 @@ public class GithubServiceImpl implements GithubService {
       int pageNo=1;
      
       
-        String url = "";
-      
-     if(month){
-        url = githubApiUrl+"repos/"+ownerAndRepo[0]+"/"+ownerAndRepo[1]+"/"+"pulls?state=all?per_page=100?page=";
-      }else{
-         url = githubApiUrl+"repos/"+ownerAndRepo[0]+"/"+ownerAndRepo[1]+"/"+"pulls?state=all?per_page=100?page=";
-      }
-      while(true){
-        url=url+String.valueOf(pageNo);
-
+        String url = githubApiUrl+"/repos/"+ownerAndRepo[0]+"/"+ownerAndRepo[1]+"/"+"pulls";
         PullRequest[] pulls= builder.build().get().uri(url).header("Accept", "Application/json").header("Authorization", "Bearer "+accessToken).header("X-GitHub-Api-Version", "2022-11-28").retrieve().bodyToMono(PullRequest[].class).block();
-        if(pulls.length==0){
-            break;
-        }
+      // while(true){
+      //   url=url+String.valueOf(pageNo);
 
-        int total_pullLength=total_pull.length;
-        int pullsLength=pulls.length;
-        PullRequest[] result=new PullRequest[total_pullLength+pullsLength];
-        System.arraycopy(total_pull, 0, result, 0, total_pullLength);
-        System.arraycopy(pulls,0,result,total_pullLength,pullsLength);
-        total_pull=result;
-        pageNo++;
+      //   PullRequest[] pulls= builder.build().get().uri(url).header("Accept", "Application/json").header("Authorization", "Bearer "+accessToken).header("X-GitHub-Api-Version", "2022-11-28").retrieve().bodyToMono(PullRequest[].class).block();
+      //   if(pulls.length==0){
+      //       break;
+      //   }
+
+      //   int total_pullLength=total_pull.length;
+      //   int pullsLength=pulls.length;
+      //   PullRequest[] result=new PullRequest[total_pullLength+pullsLength];
+      //   System.arraycopy(total_pull, 0, result, 0, total_pullLength);
+      //   System.arraycopy(pulls,0,result,total_pullLength,pullsLength);
+      //   total_pull=result;
+      //   pageNo++;
         
-      }
+      // }
 
 
-      if(month){
-        List<PullRequest> res= new ArrayList<>();
-        LocalDateTime dateToComp= getFirstDayOfMonthAtMidnight();
-        for(PullRequest pullRequest:total_pull){
-           if(dateToComp.isBefore(pullRequest.getCreated_at())|| dateToComp.isEqual(pullRequest.getCreated_at()) || dateToComp.isEqual(pullRequest.getUpdated_at()) || dateToComp.isBefore(pullRequest.getUpdated_at())){
-             res.add(pullRequest);
-           }
-        }
-        total_pull=res.toArray(new PullRequest[0]);
-      }else{
-          List<PullRequest> res= new ArrayList<>();
-        LocalDateTime dateToComp= getPastMonday();
-        for(PullRequest pullRequest:total_pull){
-           if(dateToComp.isBefore(pullRequest.getCreated_at())|| dateToComp.isEqual(pullRequest.getCreated_at()) || dateToComp.isEqual(pullRequest.getUpdated_at()) || dateToComp.isBefore(pullRequest.getUpdated_at())){
-             res.add(pullRequest);
-           }
-        }
-        total_pull=res.toArray(new PullRequest[0]);
-      }
+      // if(month){
+      //   List<PullRequest> res= new ArrayList<>();
+      //   LocalDateTime dateToComp= getFirstDayOfMonthAtMidnight();
+      //   for(PullRequest pullRequest:total_pull){
+      //      if(dateToComp.isBefore(pullRequest.getCreated_at())|| dateToComp.isEqual(pullRequest.getCreated_at()) || dateToComp.isEqual(pullRequest.getUpdated_at()) || dateToComp.isBefore(pullRequest.getUpdated_at())){
+      //        res.add(pullRequest);
+      //      }
+      //   }
+      //   total_pull=res.toArray(new PullRequest[0]);
+      // }else{
+      //     List<PullRequest> res= new ArrayList<>();
+      //   LocalDateTime dateToComp= getPastMonday();
+      //   for(PullRequest pullRequest:total_pull){
+      //      if(dateToComp.isBefore(pullRequest.getCreated_at())|| dateToComp.isEqual(pullRequest.getCreated_at()) || dateToComp.isEqual(pullRequest.getUpdated_at()) || dateToComp.isBefore(pullRequest.getUpdated_at())){
+      //        res.add(pullRequest);
+      //      }
+      //   }
+      //   total_pull=res.toArray(new PullRequest[0]);
+      // }
 
-      return total_pull;
+      return pulls;
       
     }
 
@@ -126,36 +121,38 @@ public class GithubServiceImpl implements GithubService {
     public Issue[] totalIssues(String link ,String accessToken, Boolean month){
       String[] ownerAndRepo=extractOwnerAndRepo(link);
       
-      String url="";
-      if(month){
-        LocalDateTime since=getFirstDayOfMonthAtMidnight();
-        url=githubApiUrl+"/repos/"+ownerAndRepo[0]+"/"+ownerAndRepo[1]+"/issues?state=all?since="+since+"?per_page=100?page=";
-      }else{
-        LocalDateTime since=getPastMonday();
-         url=githubApiUrl+"/repos/"+ownerAndRepo[0]+"/"+ownerAndRepo[1]+"/issues?state=all?since="+since+"?per_page=100?page=";        
-      }
+      String url=githubApiUrl+"/repos/"+ownerAndRepo[0]+"/"+ownerAndRepo[1]+"/issues";
+      // if(month){
+      //   LocalDateTime since=getFirstDayOfMonthAtMidnight();
+      //   url=githubApiUrl+"/repos/"+ownerAndRepo[0]+"/"+ownerAndRepo[1]+"/issues?state=all?since="+since+"?per_page=100?page=";
+      // }else{
+      //   LocalDateTime since=getPastMonday();
+      //    url=githubApiUrl+"/repos/"+ownerAndRepo[0]+"/"+ownerAndRepo[1]+"/issues?state=all?since="+since+"?per_page=100?page=";        
+      // }
 
        Issue[] totalIssues={};
        WebClient.Builder builder=WebClient.builder();
-       int pageNo=1;
-       while(true){
-         url=url+String.valueOf(pageNo);
+                 Issue[] issues= builder.build().get().uri(url).header("Accept", "Application/json").header("Authorization", "Bearer "+accessToken).header("X-GitHub-Api-Version", "2022-11-28").retrieve().bodyToMono(Issue[].class).block();
+      //  int pageNo=1;
+      //  while(true){
+      //    url=url;
         
-          Issue[] issues= builder.build().get().uri(url).header("Accept", "Application/json").header("Authorization", "Bearer "+accessToken).header("X-GitHub-Api-Version", "2022-11-28").retrieve().bodyToMono(Issue[].class).block();
-        if(issues.length==0){
-            break;
-        }
-        int total_issuesLength=totalIssues.length;
-        int issuesLength=issues.length;
-        Issue[] result=new Issue[total_issuesLength+issuesLength];
-        System.arraycopy(totalIssues, 0, result, 0, total_issuesLength);
-        System.arraycopy(issues,0,result,total_issuesLength,issuesLength);
-        totalIssues=result;
+      //     Issue[] issues= builder.build().get().uri(url).header("Accept", "Application/json").header("Authorization", "Bearer "+accessToken).header("X-GitHub-Api-Version", "2022-11-28").retrieve().bodyToMono(Issue[].class).block();
+      //   if(issues.length==0){
+      //       break;
+      //   }
+      //   int total_issuesLength=totalIssues.length;
+      //   int issuesLength=issues.length;
+      //   Issue[] result=new Issue[total_issuesLength+issuesLength];
+      //   System.arraycopy(totalIssues, 0, result, 0, total_issuesLength);
+      //   System.arraycopy(issues,0,result,total_issuesLength,issuesLength);
+      //   totalIssues=result;
          
-        pageNo++;
-       }
-
-       return totalIssues;
+      //   pageNo++;
+      //  }
+      //  System.out.println(totalIssues);
+       System.out.println(";;;;;;;;;;;;;;;;;;;;;;;;;");
+       return issues;
       
     }
        
@@ -163,37 +160,38 @@ public class GithubServiceImpl implements GithubService {
     public Commit[] totalCommits(String link, String accessToken, Boolean month){
           String[] ownerAndRepo=extractOwnerAndRepo(link);
           Commit[] total_commits={};
-          String url="";
-          if(month){
-            LocalDateTime since=getFirstDayOfMonthAtMidnight();
-             url=githubApiUrl+"/repos/"+ownerAndRepo[0]+"/"+ownerAndRepo[1]+"/stats/contributors?since"+since+"?per_page=100?page=";
-          }else{
-            LocalDateTime since=getPastMonday();
-             url=githubApiUrl+"/repos/"+ownerAndRepo[0]+"/"+ownerAndRepo[1]+"/stats/contributors?since"+since+"?per_page=100?page=";
-          }
+          String url=githubApiUrl+"/repos/"+ownerAndRepo[0]+"/"+ownerAndRepo[1]+"/commits";
+          // if(month){
+          //   LocalDateTime since=getFirstDayOfMonthAtMidnight();
+          //    url=githubApiUrl+"/repos/"+ownerAndRepo[0]+"/"+ownerAndRepo[1]+"/stats/commits?since"+since+"?per_page=100?page=";
+          // }else{
+          //   LocalDateTime since=getPastMonday();
+          //    url=githubApiUrl+"/repos/"+ownerAndRepo[0]+"/"+ownerAndRepo[1]+"/stats/commits?since"+since+"?per_page=100?page=";
+          // }
           int pageNo=1;
           WebClient.Builder builder=WebClient.builder();
-          while(true){
-            url=url+String.valueOf(pageNo);
-            Commit[] commits= builder.build().get().uri(url).header("Accept", "Application/json").header("Authorization", "Bearer "+accessToken).header("X-GitHub-Api-Version", "2022-11-28").retrieve().bodyToMono(Commit[].class).block();
-            if(commits.length==0){
-               break;
-             }
+          Commit[] commits= builder.build().get().uri(url).header("Accept", "Application/json").header("Authorization", "Bearer "+accessToken).header("X-GitHub-Api-Version", "2022-11-28").retrieve().bodyToMono(Commit[].class).block();
+        //   while(true){
+        //     url=url;
+        //     Commit[] commits= builder.build().get().uri(url).header("Accept", "Application/json").header("Authorization", "Bearer "+accessToken).header("X-GitHub-Api-Version", "2022-11-28").retrieve().bodyToMono(Commit[].class).block();
+        //     if(commits.length==0){
+        //        break;
+        //      }
            
-              int total_commitsLength=total_commits.length;
-        int commitsLength=commits.length;
-        Commit[] result=new Commit[total_commitsLength+commitsLength];
-        System.arraycopy(total_commits, 0, result, 0, total_commitsLength);
-        System.arraycopy(commits,0,result,total_commitsLength,commitsLength);
-        total_commits=result;
+        //       int total_commitsLength=total_commits.length;
+        // int commitsLength=commits.length;
+        // Commit[] result=new Commit[total_commitsLength+commitsLength];
+        // System.arraycopy(total_commits, 0, result, 0, total_commitsLength);
+        // System.arraycopy(commits,0,result,total_commitsLength,commitsLength);
+        // total_commits=result;
          
 
 
-            pageNo++;
+        //     pageNo++;
 
-          }
+        //   }
 
-          return total_commits;
+          return commits;
     }
 
     private static String[] extractOwnerAndRepo(String repoLink) {

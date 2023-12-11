@@ -9,6 +9,7 @@ import org.springframework.data.redis.core.RedisHash;
 import com.mdgspace.activityleaderboard.models.Organization;
 import com.mdgspace.activityleaderboard.payload.response.GetProjectStatsResponse;
 
+
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;

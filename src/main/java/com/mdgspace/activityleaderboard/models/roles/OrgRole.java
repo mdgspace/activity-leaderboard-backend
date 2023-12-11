@@ -1,5 +1,7 @@
 package com.mdgspace.activityleaderboard.models.roles;
 
+import java.io.Serializable;
+
 import com.mdgspace.activityleaderboard.models.Organization;
 import com.mdgspace.activityleaderboard.models.User;
 import com.mdgspace.activityleaderboard.models.enums.EOrgRole;

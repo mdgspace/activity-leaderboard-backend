@@ -1,10 +1,11 @@
 package com.mdgspace.activityleaderboard.payload.request;
 
+import java.io.Serializable;
 import java.util.Map;
 
 
 
-public class SetArcheiveStatusRequest {
+public class SetArcheiveStatusRequest  {
     
     private Map<String , Boolean> archeiveStatus;
 

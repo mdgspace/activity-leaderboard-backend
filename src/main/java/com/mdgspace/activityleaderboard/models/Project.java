@@ -2,6 +2,7 @@
 //  WIP
 package com.mdgspace.activityleaderboard.models;
 
+import java.io.Serializable;
 import java.util.HashSet;
 
 import java.util.Set;
@@ -18,7 +19,7 @@ import jakarta.validation.constraints.Size;
 @Table(name="projects",uniqueConstraints = {
     @UniqueConstraint(columnNames = "link")
 })
-public class Project {
+public class Project implements Serializable{
     
     @Id 
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -1,5 +1,7 @@
 package com.mdgspace.activityleaderboard.payload.request;
 
+import java.io.Serializable;
+
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 

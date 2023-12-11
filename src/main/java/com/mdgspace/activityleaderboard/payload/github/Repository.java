@@ -1,5 +1,7 @@
 package com.mdgspace.activityleaderboard.payload.github;
 
+import java.io.Serializable;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 

@@ -1,5 +1,7 @@
 package com.mdgspace.activityleaderboard.payload.request;
 
+import java.io.Serializable;
+
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
@@ -10,7 +12,7 @@ import lombok.Data;
 @AllArgsConstructor
 @Data
 @Builder
-public class AddOrgRequest {
+public class AddOrgRequest  {
     
     @NotBlank
     @Size(min=3,max=15)
