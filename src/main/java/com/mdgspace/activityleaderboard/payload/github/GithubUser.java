@@ -5,7 +5,7 @@ import java.io.Serializable;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 //  For deserializing githubapi/user response
-public class GithubUser {
+public class GithubUser implements Serializable {
     
     @JsonProperty("login")
     private String username;

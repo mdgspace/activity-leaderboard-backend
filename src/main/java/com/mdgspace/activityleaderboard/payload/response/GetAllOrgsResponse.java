@@ -12,6 +12,6 @@ import lombok.Data;
 @AllArgsConstructor
 @Data
 @Builder
-public class GetAllOrgsResponse {
+public class GetAllOrgsResponse implements Serializable{
     private List<Organization> organizations;
 }

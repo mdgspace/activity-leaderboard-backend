@@ -3,7 +3,7 @@ package com.mdgspace.activityleaderboard.payload.response;
 import java.io.Serializable;
 
 // Class for serializing the jwt_response
-public class JwtResponse  {
+public class JwtResponse implements Serializable  {
     
     // JWT Access token
     private String token;

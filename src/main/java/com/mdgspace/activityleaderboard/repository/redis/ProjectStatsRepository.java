@@ -1,16 +1,18 @@
 package com.mdgspace.activityleaderboard.repository.redis;
 
+import java.util.Map;
 import java.util.Optional;
-
-
-import org.springframework.data.repository.CrudRepository;
-import org.springframework.stereotype.Repository;
 
 import com.mdgspace.activityleaderboard.models.Organization;
 import com.mdgspace.activityleaderboard.models.Project;
 import com.mdgspace.activityleaderboard.models.redis.ProjectStats;
 
-@Repository
-public interface ProjectStatsRepository extends CrudRepository<ProjectStats ,String>{
-    Optional<ProjectStats> findfindByOrganizationAndProjectAndMonthly(Organization organization,Project project, Boolean monthly);
+
+public interface ProjectStatsRepository {
+    // Optional<ProjectStats> findfindByOrganizationAndProjectAndMonthly(Organization organization,Project project, Boolean monthly);
+    void save(ProjectStats projectStats);
+    void update(ProjectStats projectStats);
+    Map<String,ProjectStats> findAll();
+    Optional<ProjectStats> findByOrganizationAndProjectAndMonthly(Organization organization, Project project, Boolean monthly);
+
 }

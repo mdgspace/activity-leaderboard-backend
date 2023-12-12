@@ -13,7 +13,7 @@ import lombok.Data;
 @AllArgsConstructor
 @Data
 @Builder
-public class PullRequest {
+public class PullRequest implements Serializable{
     
     @JsonProperty("user")
     private UserObject user;

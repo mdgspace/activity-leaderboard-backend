@@ -10,6 +10,6 @@ import lombok.Data;
 @AllArgsConstructor
 @Data
 @Builder
-public class GetUsersOrgs {
+public class GetUsersOrgs implements Serializable {
     private Map<String, String> userOrgsAndRoles;
 }

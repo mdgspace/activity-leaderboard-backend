@@ -11,6 +11,6 @@ import lombok.Data;
 @AllArgsConstructor
 @Data
 @Builder
-public class GetProjectsResponse {
+public class GetProjectsResponse implements Serializable{
     private Map<String,Map<String,Boolean>> projects;
 }

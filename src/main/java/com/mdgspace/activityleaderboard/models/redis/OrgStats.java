@@ -8,13 +8,8 @@ import com.mdgspace.activityleaderboard.models.Organization;
 import com.mdgspace.activityleaderboard.payload.response.GetOrgStatsResponse;
 
 
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
+import jakarta.persistence.Id;
 
 
 @RedisHash("OrgStats")

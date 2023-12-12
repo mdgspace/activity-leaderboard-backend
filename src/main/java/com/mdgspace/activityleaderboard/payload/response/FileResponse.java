@@ -9,7 +9,7 @@ import lombok.Data;
 @AllArgsConstructor
 @Data
 @Builder
-public class FileResponse  {
+public class FileResponse implements Serializable {
     private String message;
     private boolean isSuccessful;
     private int statusCode;

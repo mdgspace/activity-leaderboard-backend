@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.Map;
 
 
-public class ChangeOrgMembersStatusRequest {
+public class ChangeOrgMembersStatusRequest implements Serializable{
     
     private Map<String , String> orgMembersStatus;
 

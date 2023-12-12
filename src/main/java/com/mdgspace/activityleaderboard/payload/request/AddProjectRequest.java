@@ -5,7 +5,7 @@ import java.io.Serializable;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
-public class AddProjectRequest {
+public class AddProjectRequest implements Serializable{
     
     @NotBlank
     @Size(min=3,max=10)

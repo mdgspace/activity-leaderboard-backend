@@ -10,8 +10,7 @@ import com.mdgspace.activityleaderboard.models.Organization;
 import com.mdgspace.activityleaderboard.payload.response.GetProjectStatsResponse;
 
 
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
+
 import jakarta.persistence.Id;
 import lombok.Data;
 
@@ -21,7 +20,6 @@ import lombok.Data;
 public class OrganizationRank implements Serializable{
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     private String id;
 
     private Organization organization;

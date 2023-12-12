@@ -5,7 +5,7 @@ import java.util.Set;
 
 
 
-public class AddMembersRequest  {
+public class AddMembersRequest implements Serializable {
     
     private Set<String> members;
 

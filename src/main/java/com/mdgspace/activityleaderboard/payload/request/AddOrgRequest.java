@@ -12,7 +12,7 @@ import lombok.Data;
 @AllArgsConstructor
 @Data
 @Builder
-public class AddOrgRequest  {
+public class AddOrgRequest implements Serializable {
     
     @NotBlank
     @Size(min=3,max=15)

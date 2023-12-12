@@ -6,7 +6,7 @@ import java.io.Serializable;
 import java.util.Map;
 
 
-public class SetBookmarkStatusRequest  {
+public class SetBookmarkStatusRequest implements Serializable {
     
     private Map<String , Boolean> bookmarkStatus;
 

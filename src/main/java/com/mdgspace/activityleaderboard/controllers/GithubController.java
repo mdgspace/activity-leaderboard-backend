@@ -44,7 +44,7 @@ import com.mdgspace.activityleaderboard.repository.OrgRoleRepository;
 import com.mdgspace.activityleaderboard.repository.ProjectRepository;
 import com.mdgspace.activityleaderboard.repository.ProjectRoleRepository;
 import com.mdgspace.activityleaderboard.repository.UserRepository;
-import com.mdgspace.activityleaderboard.repository.redis.OrgStatsRepositoryImpl;
+import com.mdgspace.activityleaderboard.repository.redis.OrgStatsRepository;
 import com.mdgspace.activityleaderboard.repository.redis.OrganizationRankRepository;
 import com.mdgspace.activityleaderboard.repository.redis.ProjectStatsRepository;
 import com.mdgspace.activityleaderboard.services.github.service.GithubService;
@@ -76,14 +76,15 @@ public class GithubController {
     @Autowired
     GithubService githubService;
 
-    @Autowired
-    OrganizationRankRepository organizationRankRepository;
 
     @Autowired
     ProjectStatsRepository projectStatsRepository;
 
     @Autowired
-    OrgStatsRepositoryImpl orgStatsRepository;
+    OrgStatsRepository orgStatsRepository;
+
+    @Autowired
+    OrganizationRankRepository organizationRankRepository;
 
     @GetMapping("/{orgName}")
     public ResponseEntity<?> getOrgStatus(@PathVariable String orgName, @RequestParam(required = true) Boolean monthly,
@@ -256,7 +257,7 @@ public class GithubController {
             }
 
             ProjectStats projectStats = projectStatsRepository
-                    .findfindByOrganizationAndProjectAndMonthly(org, project, monthly).orElse(null);
+                    .findByOrganizationAndProjectAndMonthly(org, project, monthly).orElse(null);
             if (projectStats != null && Instant.now().toEpochMilli() - projectStats.getTime() >= 60000) {
                 return ResponseEntity.ok().body(projectStats.getResponse());
             } else if (projectStats != null) {
@@ -314,10 +315,10 @@ public class GithubController {
                         }
                         Map<String, Map<String, Integer>> sortedRes = sortByInnerMapValue(res, "pulls");
                         long unixTimeMillis = Instant.now().toEpochMilli();
-                        ProjectStats project_stats = new ProjectStats(org, project,
-                                new GetProjectStatsResponse(sortedRes),
-                                monthly, unixTimeMillis);
-                        projectStatsRepository.save(project_stats);
+                        projectStats.setTime(unixTimeMillis);
+                        projectStats.setResponse(new GetProjectStatsResponse(sortedRes));
+                        projectStats.setMonthly(monthly);
+                        projectStatsRepository.update(projectStats);
 
                     } catch (Exception e) {
                         log.error("Thread Error", e);
@@ -402,6 +403,7 @@ public class GithubController {
 
             OrganizationRank organizationRank = organizationRankRepository.findByOrganizationAndMonthly(org, monthly)
                     .orElse(null);
+                 
             long unixTimeMillis = Instant.now().toEpochMilli();
 
             if (organizationRank != null && (unixTimeMillis - organizationRank.getTime() <= 60000)) {
@@ -445,10 +447,12 @@ public class GithubController {
                             }
                         }
                         Map<String, Map<String, Integer>> sortedRes = sortByInnerMapValue(res, "pulls");
-                        OrganizationRank orgRankRedis = new OrganizationRank(org,
-                                new GetProjectStatsResponse(sortedRes),
-                                monthly, Instant.now().toEpochMilli());
-                        organizationRankRepository.save(orgRankRedis);
+                     
+                        organizationRank.setTime(Instant.now().toEpochMilli());
+                        organizationRank.setResponse(new GetProjectStatsResponse(sortedRes));
+                        organizationRankRepository.update(organizationRank);
+                        organizationRank.setMonthly(monthly);
+                      
 
                     } catch (Exception e) {
                         log.error("Thread Exception ", e);

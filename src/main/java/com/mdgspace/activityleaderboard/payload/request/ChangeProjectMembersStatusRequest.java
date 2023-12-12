@@ -9,6 +9,6 @@ import lombok.Data;
 
 
 @Data
-public class ChangeProjectMembersStatusRequest  {
+public class ChangeProjectMembersStatusRequest implements Serializable {
     private Map<String, String> projectMembersStatus;
 }

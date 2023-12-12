@@ -10,7 +10,7 @@ import lombok.Data;
 @AllArgsConstructor
 @Data
 @Builder
-public class AddMembersResponse{
+public class AddMembersResponse  implements Serializable{
     
     private Set<String> membersAddedOrRemoved;
 }

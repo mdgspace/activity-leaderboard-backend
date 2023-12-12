@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.mdgspace.activityleaderboard.models.User;
 
-public class UsersResponse  {
+public class UsersResponse implements Serializable {
 
     private List<User> users;
 

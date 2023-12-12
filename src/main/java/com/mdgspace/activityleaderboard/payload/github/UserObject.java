@@ -11,7 +11,7 @@ import lombok.Data;
 @AllArgsConstructor
 @Data
 @Builder
-public class UserObject {
+public class UserObject implements Serializable{
 
     @JsonProperty("login")
     private String username;

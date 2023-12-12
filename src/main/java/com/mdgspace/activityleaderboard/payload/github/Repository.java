@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 
 
-public class Repository {
+public class Repository implements Serializable{
     
 
     @JsonProperty("name")

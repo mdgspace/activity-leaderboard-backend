@@ -13,7 +13,7 @@ import lombok.Data;
 @AllArgsConstructor
 @Data
 @Builder
-public class Issue {
+public class Issue implements Serializable{
     
 
     @JsonProperty("title")

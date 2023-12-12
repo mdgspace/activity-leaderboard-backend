@@ -4,14 +4,13 @@ import java.io.Serializable;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
+
 import lombok.Data;
-import lombok.NoArgsConstructor;
+
 
 
 @Data
-public class Commit {
+public class Commit implements Serializable {
     
     @JsonProperty("committer")
     private Committer committer;

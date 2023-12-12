@@ -10,6 +10,6 @@ import lombok.Data;
 @AllArgsConstructor
 @Data
 @Builder
-public class ProjectStatsResponse {
+public class ProjectStatsResponse implements Serializable{
     Map<String,Map<String,Integer>> projects;
 }

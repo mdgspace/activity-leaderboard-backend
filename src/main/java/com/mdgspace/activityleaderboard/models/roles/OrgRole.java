@@ -19,7 +19,7 @@ import jakarta.persistence.ManyToOne;
 
 
 @Entity
-public class OrgRole {
+public class OrgRole implements Serializable{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

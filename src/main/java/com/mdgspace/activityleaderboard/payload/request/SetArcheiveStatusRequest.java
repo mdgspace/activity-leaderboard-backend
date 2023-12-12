@@ -5,7 +5,7 @@ import java.util.Map;
 
 
 
-public class SetArcheiveStatusRequest  {
+public class SetArcheiveStatusRequest  implements Serializable{
     
     private Map<String , Boolean> archeiveStatus;
 
