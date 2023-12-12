@@ -22,7 +22,7 @@ public class  OrgStats implements Serializable{
 
 
     @Id
-    private int id;
+    private String id;
     
     private Organization organization;
 
@@ -36,7 +36,7 @@ public class  OrgStats implements Serializable{
 
     }
 
-    public OrgStats(int id,Organization organization, GetOrgStatsResponse response, Boolean monthly, Long time){
+    public OrgStats(String id,Organization organization, GetOrgStatsResponse response, Boolean monthly, Long time){
         this.organization=organization;
         this.response=response;
         this.monthly=monthly;
@@ -44,7 +44,7 @@ public class  OrgStats implements Serializable{
         this.id=id;        
     }
 
-    public int getId(){
+    public String getId(){
         return id;
     }
 
@@ -64,7 +64,7 @@ public class  OrgStats implements Serializable{
         return response;
     }
 
-    public void setId(int id){
+    public void setId(String id){
         this.id=id;
     }
 

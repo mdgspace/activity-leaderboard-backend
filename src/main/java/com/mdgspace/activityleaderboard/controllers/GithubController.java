@@ -10,6 +10,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -43,7 +44,7 @@ import com.mdgspace.activityleaderboard.repository.OrgRoleRepository;
 import com.mdgspace.activityleaderboard.repository.ProjectRepository;
 import com.mdgspace.activityleaderboard.repository.ProjectRoleRepository;
 import com.mdgspace.activityleaderboard.repository.UserRepository;
-import com.mdgspace.activityleaderboard.repository.redis.OrgStatsRepository;
+import com.mdgspace.activityleaderboard.repository.redis.OrgStatsRepositoryImpl;
 import com.mdgspace.activityleaderboard.repository.redis.OrganizationRankRepository;
 import com.mdgspace.activityleaderboard.repository.redis.ProjectStatsRepository;
 import com.mdgspace.activityleaderboard.services.github.service.GithubService;
@@ -82,7 +83,7 @@ public class GithubController {
     ProjectStatsRepository projectStatsRepository;
 
     @Autowired
-    OrgStatsRepository orgStatsRepository;
+    OrgStatsRepositoryImpl orgStatsRepository;
 
     @GetMapping("/{orgName}")
     public ResponseEntity<?> getOrgStatus(@PathVariable String orgName, @RequestParam(required = true) Boolean monthly,
@@ -93,19 +94,10 @@ public class GithubController {
                 return ResponseEntity.badRequest().body("Organization does not exists");
             }
             User user = userRepository.findByUsername(principal.getName()).orElse(null);
-           
-            OrgStats orgStats = null;
-            List<OrgStats> orgStatsList=orgStatsRepository.findAll() ;
-            System.out.println(orgStatsList);
-            System.out.println(";;;;;;;;;;;;;;;;;;;;;;;;;");
-            
-            System.out.println(orgStatsList);
-            // for(OrgStats org_stats:orgStatsList){
-            //     if(org_stats.getOrganization().equals(org)&& org_stats.getMonthly()==monthly){
-            //         orgStats=org_stats;
-            //     }
-            // }         
-            System.out.println(";;;;;;;;;;;;;;;;;;;;;;;;;");
+          
+          
+            OrgStats orgStats=orgStatsRepository.findByOrganizationAndMonthly(org, monthly).orElse(null);
+       
             if(orgStats != null && Instant.now().toEpochMilli() - orgStats.getTime() <= 60000){
                return ResponseEntity.ok().body(orgStats.getResponse());
             }
@@ -168,11 +160,13 @@ public class GithubController {
                             stats.put("issues", 0);
                             res.put(project.getName(), stats);
                         }
-
-                        OrgStats org_stats = new OrgStats(1234,org, new GetOrgStatsResponse(res), monthly,
-                                Instant.now().toEpochMilli());
                         
-                        orgStatsRepository.save(org_stats);
+                      
+                        orgStats.setMonthly(monthly);
+                        orgStats.setTime(Instant.now().toEpochMilli());
+                        orgStats.setResponse(new GetOrgStatsResponse(res));
+                        
+                        orgStatsRepository.update(orgStats);
 
                     }
                 } catch (Exception e) {
@@ -183,9 +177,6 @@ public class GithubController {
               });
             }
             Set<Project> projects = org.getProjects();
-           System.out.println(";;;;;;;;;;;;;;;;;;;;;;;;;");
-
-            // return ResponseEntity.ok().body("hwllp");
             Map<String, Map<String, Integer>> res = new HashMap<>();
             for (Project project : projects) {
                 try {
@@ -239,12 +230,10 @@ public class GithubController {
                 }
 
             }
-            System.out.println(";;;;;;;;;;;;;;;;;;;;;;;;;");
-            System.out.println(new GetOrgStatsResponse(res));
-            OrgStats org_Stats= new OrgStats(123,org, new GetOrgStatsResponse(res), monthly, Instant.now().toEpochMilli());
+      
+            String id= generateRandomString();
+            OrgStats org_Stats= new OrgStats(id,org, new GetOrgStatsResponse(res), monthly, Instant.now().toEpochMilli());
             orgStatsRepository.save(org_Stats);
-            System.out.println(org_Stats);
-
             return ResponseEntity.ok().body(new GetOrgStatsResponse(res));
         } catch (Exception e) {
             log.error("Internal Server Error", e);
@@ -535,6 +524,11 @@ public class GithubController {
         }
 
         return sortedMap;
+    }
+
+
+    private static String generateRandomString() {
+        return UUID.randomUUID().toString().replace("-", "");
     }
 
 }
