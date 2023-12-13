@@ -32,12 +32,13 @@ public class ProjectStats implements Serializable {
     public ProjectStats(){
 
     }
-    public ProjectStats(Organization org, Project project,GetProjectStatsResponse response ,Boolean monthly, Long time){
+    public ProjectStats(String id,Organization org, Project project,GetProjectStatsResponse response ,Boolean monthly, Long time){
        this.organization=org;
        this.project=project;
        this.monthly=monthly;
        this.time=time;
        this.response=response;
+       this.id=id;
     }
 
 

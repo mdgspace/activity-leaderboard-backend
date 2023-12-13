@@ -9,7 +9,7 @@ import com.mdgspace.activityleaderboard.models.redis.ProjectStats;
 
 
 public interface ProjectStatsRepository {
-    // Optional<ProjectStats> findfindByOrganizationAndProjectAndMonthly(Organization organization,Project project, Boolean monthly);
+   
     void save(ProjectStats projectStats);
     void update(ProjectStats projectStats);
     Map<String,ProjectStats> findAll();

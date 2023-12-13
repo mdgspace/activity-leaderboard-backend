@@ -33,11 +33,12 @@ public class OrganizationRank implements Serializable{
     public OrganizationRank(){
 
     }
-    public OrganizationRank(Organization organization, GetProjectStatsResponse response, Boolean monthly, Long time){
+    public OrganizationRank(String id,Organization organization, GetProjectStatsResponse response, Boolean monthly, Long time){
         this.organization=organization;
         this.monthly=monthly;
         this.response=response;
         this.time=time;
+        this.id=id;
     }
 
 

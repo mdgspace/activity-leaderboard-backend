@@ -380,7 +380,8 @@ public class GithubController {
 
             Map<String, Map<String, Integer>> sortedRes = sortByInnerMapValue(res, "pulls");
 
-            ProjectStats projectStats2 = new ProjectStats(org, project, new GetProjectStatsResponse(sortedRes), monthly,
+            String id=generateRandomString();
+            ProjectStats projectStats2 = new ProjectStats(id,org, project, new GetProjectStatsResponse(sortedRes), monthly,
                     Instant.now().toEpochMilli());
             projectStatsRepository.save(projectStats2);
             return ResponseEntity.ok().body(new GetProjectStatsResponse(sortedRes));
@@ -499,7 +500,8 @@ public class GithubController {
                 }
             }
             Map<String, Map<String, Integer>> sortedRes = sortByInnerMapValue(res, "pulls");
-            OrganizationRank orgRankRedis = new OrganizationRank(org, new GetProjectStatsResponse(sortedRes),
+            String id=generateRandomString();
+            OrganizationRank orgRankRedis = new OrganizationRank(id,org, new GetProjectStatsResponse(sortedRes),
                     monthly, Instant.now().toEpochMilli());
             organizationRankRepository.save(orgRankRedis);
 
