@@ -3,23 +3,18 @@ package com.mdgspace.activityleaderboard.security.jwt;
 import java.security.Key;
 import java.util.Date;
 
-import javax.swing.Spring;
-
-import java.io.*;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
-import com.mdgspace.activityleaderboard.security.services.UserDetailsServiceImpl;
 import com.mdgspace.activityleaderboard.security.services.UserDetailsImpl;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
-import jakarta.annotation.PostConstruct;
+
 
 @Component
 public class JwtUtils {
@@ -27,7 +22,7 @@ public class JwtUtils {
     private static final Logger logger = LoggerFactory.getLogger(JwtUtils.class);
 
     private String jwtSecret="===============================mdgspace==========================";
-     private int jwtExpirationMs=156548;
+     private int jwtExpirationMs=28800000;
 
 
   
@@ -56,7 +51,7 @@ public class JwtUtils {
             return true;
 
         } catch (MalformedJwtException e) {
-
+            System.out.println(e);
             logger.error("Invalid JWT token: {}", e.getMessage());
 
         } catch (ExpiredJwtException e) {

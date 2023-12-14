@@ -1,9 +1,11 @@
 package com.mdgspace.activityleaderboard.payload.github;
+import java.io.Serializable;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 
 //  For deserializing access_token github response
-public class Accesstoken {
+public class Accesstoken implements Serializable{
 
     @JsonProperty("access_token")
     private String access_token;

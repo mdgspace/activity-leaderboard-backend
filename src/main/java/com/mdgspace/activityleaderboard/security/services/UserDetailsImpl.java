@@ -2,9 +2,8 @@ package com.mdgspace.activityleaderboard.security.services;
 
 
 import java.util.Collection;
-import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
+
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
@@ -14,7 +13,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.mdgspace.activityleaderboard.models.User;
 
-import com.mdgspace.activityleaderboard.models.User;
 
 public class UserDetailsImpl implements UserDetails{
     

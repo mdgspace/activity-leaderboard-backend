@@ -21,7 +21,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.mdgspace.activityleaderboard.security.services.UserDetailsServiceImpl;
-import com.mdgspace.activityleaderboard.security.jwt.JwtUtils;
+
 
 
 public class AuthTokenFilter extends OncePerRequestFilter{

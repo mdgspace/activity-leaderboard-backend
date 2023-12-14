@@ -1,8 +1,9 @@
 package com.mdgspace.activityleaderboard.payload.response;
 
+import java.io.Serializable;
 
 // Class for serializing the jwt_response
-public class JwtResponse {
+public class JwtResponse implements Serializable  {
     
     // JWT Access token
     private String token;
@@ -16,7 +17,7 @@ public class JwtResponse {
     // Username of user
     private String username;
 
-    public JwtResponse(String token, Long id, String username, String email){
+    public JwtResponse(String token, Long id, String username){
         this.token=token;
         this.id= id;
         this.username=username;
@@ -29,6 +30,14 @@ public class JwtResponse {
 
     public void setToken(String token){
         this.token=token;
+    }
+
+    public String getType(){
+        return type;
+    }
+
+    public void setType(String type){
+       this.type=type;
     }
 
     public Long getId(){

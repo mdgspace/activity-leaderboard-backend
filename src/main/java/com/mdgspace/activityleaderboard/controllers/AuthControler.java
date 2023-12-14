@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 
 import java.util.Optional;
 
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,12 +23,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import com.mdgspace.activityleaderboard.models.Organization;
 import com.mdgspace.activityleaderboard.models.User;
+import com.mdgspace.activityleaderboard.models.enums.EOrgRole;
+import com.mdgspace.activityleaderboard.models.roles.OrgRole;
 import com.mdgspace.activityleaderboard.payload.github.Accesstoken;
 import com.mdgspace.activityleaderboard.payload.github.GithubUser;
 import com.mdgspace.activityleaderboard.payload.request.LoginRequest;
 import com.mdgspace.activityleaderboard.payload.response.JwtResponse;
-import com.mdgspace.activityleaderboard.payload.response.MessageResponse;
+import com.mdgspace.activityleaderboard.repository.OrgRepository;
+import com.mdgspace.activityleaderboard.repository.OrgRoleRepository;
 import com.mdgspace.activityleaderboard.repository.UserRepository;
 import com.mdgspace.activityleaderboard.security.jwt.AuthEntryPointJwt;
 import com.mdgspace.activityleaderboard.security.jwt.JwtUtils;
@@ -62,6 +67,12 @@ public class AuthControler {
     @Autowired
     JwtUtils jwtUtils;
 
+    @Autowired
+    OrgRepository orgRepository;
+
+    @Autowired
+    OrgRoleRepository orgRoleRepository;
+
     // Below env variable are defined, checkout setup
 
     @Value("${GITHUB_AUTH_URL}")
@@ -91,7 +102,7 @@ public class AuthControler {
             // url to fetch access token
             String auth_url = githubAuthUrl + params;
 
-            // fior fetching 
+            // for fetching 
             WebClient.Builder builder = WebClient.builder();
 
             // github returned this token, this token can be used to get other user details
@@ -127,9 +138,22 @@ public class AuthControler {
             if(!isUser){
                 // Crete new user object
                 User new_user= new User(username, access_token,encoder.encode(username));
-                
-                // Saving in database
+
                 userRepository.save(new_user);
+                // Saving in database
+           
+                String orgName=username+"/userspace";
+                Boolean isOrg= orgRepository.existsByName(orgName);
+                if(isOrg){
+                   return  ResponseEntity.internalServerError().body("Internal server error");
+                }
+                Organization new_org= new Organization(orgName, null, null);
+                orgRepository.save(new_org);
+                EOrgRole eOrgRole= EOrgRole.ADMIN;
+                OrgRole new_org_role= new OrgRole(eOrgRole,new_org,new_user);
+                orgRoleRepository.save(new_org_role);
+
+
             }
             if(isUser){           
                 // Setting access token in database
@@ -137,6 +161,7 @@ public class AuthControler {
             }
             
             //  Steps to create the token
+            
             Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username,username ,null));
             
             SecurityContextHolder.getContext().setAuthentication(authentication);
@@ -146,7 +171,7 @@ public class AuthControler {
             String jwt = jwtUtils.generateJwtToken(authentication);
 
             // Response sent to frontend
-            return ResponseEntity.ok(new JwtResponse(userDetails.getAccesstoken(), userDetails.getId(), userDetails.getUsername(), jwt));
+            return ResponseEntity.ok(new JwtResponse(jwt, userDetails.getId(), userDetails.getUsername()));
 
         } catch (Exception e) {
 
