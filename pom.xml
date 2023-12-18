@@ -16,7 +16,7 @@
 	<artifactId>activityleaderboard</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>activityleaderboard</name>
-	<description>Demo project for Spring Boot</description>
+	<description>Spring boot backend for activity-leaderboard</description>
 
 	<!-- Project properties to set versions for plugins and dependencies -->
 	<properties>
