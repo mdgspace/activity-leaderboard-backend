@@ -18,6 +18,8 @@
 .settings
 .springBeans
 .vscode
+.env
+env.sh
 /code
 MANIFEST.MF
 _site/
