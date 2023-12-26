@@ -70,6 +70,7 @@
 /home/yash/activity-leaderboard-stuffs/activity-leaderboard-backend/src/main/java/com/mdgspace/activityleaderboard/payload/github/PullRequest.java
 /home/yash/activity-leaderboard-stuffs/activity-leaderboard-backend/src/main/java/com/mdgspace/activityleaderboard/repository/OrgRoleRepository.java
 /home/yash/activity-leaderboard-stuffs/activity-leaderboard-backend/src/main/java/com/mdgspace/activityleaderboard/services/aws/S3/service/FileServiceImpl.java
+/home/yash/activity-leaderboard-stuffs/activity-leaderboard-backend/src/main/java/com/mdgspace/activityleaderboard/security/CorsConfig.java
 /home/yash/activity-leaderboard-stuffs/activity-leaderboard-backend/src/main/java/com/mdgspace/activityleaderboard/security/jwt/AuthTokenFilter.java
 /home/yash/activity-leaderboard-stuffs/activity-leaderboard-backend/src/main/java/com/mdgspace/activityleaderboard/payload/github/Commit.java
 /home/yash/activity-leaderboard-stuffs/activity-leaderboard-backend/src/main/java/com/mdgspace/activityleaderboard/services/github/service/GithubServiceImpl.java

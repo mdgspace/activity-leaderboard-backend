@@ -430,7 +430,7 @@ public class OrgController {
    }
 
    @GetMapping("/getProjects/{orgName}")
-   public ResponseEntity<?> getBookmark(@PathVariable String orgName){
+   public ResponseEntity<?> getProjects(@PathVariable String orgName){
     try{
 
       Organization org = orgRepository.findByName(orgName).orElse(null);
