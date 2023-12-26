@@ -13,7 +13,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-
+import org.springframework.web.cors.CorsConfiguration;
 
 import com.mdgspace.activityleaderboard.security.jwt.AuthTokenFilter;
 import com.mdgspace.activityleaderboard.security.services.UserDetailsServiceImpl;
@@ -57,10 +57,11 @@ public class WebSecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
 
+        
         http.csrf(csrf -> csrf.disable()).exceptionHandling(exception -> exception.authenticationEntryPoint(unauthorizedHandler)).sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)).authorizeHttpRequests(auth -> auth.requestMatchers("/api/auth/**").permitAll().requestMatchers("/api/protected/**").authenticated().anyRequest().permitAll());
         http.authenticationProvider(authenticationProvider());
         http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
-        http.cors();
+        http.cors().configurationSource(request -> new CorsConfiguration().applyPermitDefaultValues());
         return http.build();
     }
 
