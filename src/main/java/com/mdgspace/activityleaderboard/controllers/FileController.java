@@ -46,7 +46,7 @@ import lombok.extern.slf4j.Slf4j;
 @CrossOrigin(origins = "*",maxAge=3600)
 @RestController
 @Slf4j
-@RequestMapping("/protected/file")
+@RequestMapping("/api/protected/file")
 @Validated
 public class FileController {
     private final FileService fileService;

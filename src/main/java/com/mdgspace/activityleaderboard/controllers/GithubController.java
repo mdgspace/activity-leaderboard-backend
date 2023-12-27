@@ -1,5 +1,6 @@
 package com.mdgspace.activityleaderboard.controllers;
 
+
 import java.security.Principal;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -15,6 +16,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -392,10 +394,13 @@ public class GithubController {
         }
     }
 
+  
     @GetMapping("/{orgName}/getRanks")
     public ResponseEntity<?> getRankings(@RequestParam(required = true) Boolean monthly, @PathVariable String orgName,
             Principal principal) {
         try {
+         
+           
             Organization org = orgRepository.findByName(orgName).orElse(null);
             if (org == null) {
                 return ResponseEntity.badRequest().body("Organization does not exists");
