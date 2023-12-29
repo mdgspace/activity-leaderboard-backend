@@ -3,14 +3,13 @@ services:
   api:
     build:
       context: ./
-      dockerfile: local.Dockerfile 
+      dockerfile: Dockerfile 
     volumes:
       - ./:/app
       - ./.m2:/root/.m2
     working_dir: /app 
-    command: sh run.sh
     env_file:
-      - .env 
+      - env.list
     ports:
       - 8080:8080
       - 35729:35729
