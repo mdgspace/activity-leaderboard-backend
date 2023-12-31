@@ -2,7 +2,10 @@ package com.mdgspace.activityleaderboard.payload.response;
 
 import java.io.Serializable;
 
+import lombok.NoArgsConstructor;
+
 // Class for serializing the jwt_response
+@NoArgsConstructor
 public class JwtResponse implements Serializable  {
     
     // JWT Access token

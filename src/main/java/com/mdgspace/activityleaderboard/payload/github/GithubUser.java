@@ -4,7 +4,12 @@ import java.io.Serializable;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import lombok.AllArgsConstructor;
+
 //  For deserializing githubapi/user response
+
+
+@AllArgsConstructor
 public class GithubUser implements Serializable {
     
     @JsonProperty("login")
