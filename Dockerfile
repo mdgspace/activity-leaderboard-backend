@@ -9,7 +9,9 @@ WORKDIR /app
 COPY pom.xml .
 
 # Fetch the dependencies
-RUN mvn dependencies:go-offline
+# RUN mvn dependencies:go-offline
+# RUN mvn clean install
+
 
 # Copy the source code
 
