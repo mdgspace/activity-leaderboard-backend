@@ -40,3 +40,8 @@ overridedb.*
 secrets.yml
 .gradletasknamecache
 .sts4-cache
+.idea
+target
+.m2
+.mvn
+env.list
