@@ -2,6 +2,7 @@ package com.mdgspace.activityleaderboard.services.github.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -9,10 +10,13 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import com.mdgspace.activityleaderboard.payload.github.Accesstoken;
 import com.mdgspace.activityleaderboard.payload.github.Commit;
+import com.mdgspace.activityleaderboard.payload.github.GithubUser;
 import com.mdgspace.activityleaderboard.payload.github.Issue;
 import com.mdgspace.activityleaderboard.payload.github.PullRequest;
 import com.mdgspace.activityleaderboard.payload.github.Repository;
+import com.nimbusds.oauth2.sdk.token.AccessToken;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -28,6 +32,14 @@ public class GithubServiceImpl implements GithubService {
 
     @Value("${GITHUB_CLIENT_SECRET}")
     private String client_secret;
+
+
+    @Value("${GITHUB_CLIENT_ID}")
+    private String client_id;
+
+    @Value("${GITHUB_AUTH_URL}")
+    private String githubAuthUrl;
+
 
     @Value("${GITHUB_API_URL}")
     private String githubApiUrl;
@@ -204,6 +216,41 @@ public class GithubServiceImpl implements GithubService {
         
 
         return total_commits;
+    }
+
+    @Override
+    public Optional<String> getAccesstoken(String code){
+
+        String params = "?client_id=" + client_id + "&client_secret=" + client_secret + "&code=" + code;
+        String auth_url = githubAuthUrl + params;
+        WebClient.Builder builder = WebClient.builder();
+        Accesstoken accesstokenResponse = builder.build().get().uri(auth_url).header("Accept", "application/json")
+        .retrieve().bodyToMono(Accesstoken.class).block();
+
+        String acess_token= accesstokenResponse.getAccesstoken();
+
+        if(acess_token==null){
+            return Optional.empty();
+        }
+
+        return Optional.of(acess_token);
+        
+    }
+
+    @Override
+    public Optional<String> getGithubUserName(String access_token){
+
+          // Github_api endpoint to get userdetails
+        String user_url = githubApiUrl + "/user";
+        WebClient.Builder builder = WebClient.builder();
+        GithubUser userResponse = builder.build().get().uri(user_url).header("Accept", "application/json")
+        .header("Authorization", "Bearer " + access_token).header("X-GitHub-Api-Version", "2022-11-28")
+        .retrieve().bodyToMono(GithubUser.class).block();
+        String username= userResponse.getUsername();
+        if(username==null){
+            return Optional.empty();
+        }
+        return Optional.of(username);
     }
 
     private static String[] extractOwnerAndRepo(String repoLink) {

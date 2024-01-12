@@ -8,7 +8,6 @@ import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -21,14 +20,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.reactive.function.client.WebClient;
 
 import com.mdgspace.activityleaderboard.models.Organization;
 import com.mdgspace.activityleaderboard.models.User;
 import com.mdgspace.activityleaderboard.models.enums.EOrgRole;
 import com.mdgspace.activityleaderboard.models.roles.OrgRole;
-import com.mdgspace.activityleaderboard.payload.github.Accesstoken;
-import com.mdgspace.activityleaderboard.payload.github.GithubUser;
 import com.mdgspace.activityleaderboard.payload.request.LoginRequest;
 import com.mdgspace.activityleaderboard.payload.response.JwtResponse;
 import com.mdgspace.activityleaderboard.repository.OrgRepository;
@@ -37,13 +33,12 @@ import com.mdgspace.activityleaderboard.repository.UserRepository;
 import com.mdgspace.activityleaderboard.security.jwt.AuthEntryPointJwt;
 import com.mdgspace.activityleaderboard.security.jwt.JwtUtils;
 import com.mdgspace.activityleaderboard.security.services.UserDetailsImpl;
+import com.mdgspace.activityleaderboard.services.github.service.GithubService;
 
 
 // For handling cors errors
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
-
-//  Append  /api/auth as prefix before using endpoint defined on Authcontroller
 @RequestMapping("/api/auth")
 public class AuthControler {
 
@@ -73,20 +68,9 @@ public class AuthControler {
     @Autowired
     OrgRoleRepository orgRoleRepository;
 
-    // Below env variable are defined, checkout setup
 
-    @Value("${GITHUB_AUTH_URL}")
-    private String githubAuthUrl;
-
-    @Value("${GITHUB_CLIENT_ID}")
-    private String client_id;
-
-    @Value("${GITHUB_CLIENT_SECRET}")
-    private String client_secret;
-
-    @Value("${GITHUB_API_URL}")
-    private String githubApiUrl;
-
+    @Autowired
+    GithubService githubService;
 
     // POST request is defined for login
     @PostMapping("/login")
@@ -96,34 +80,14 @@ public class AuthControler {
             // Code sent to user by github
             String code = loginRequest.getCode();
 
-            // param defined by github, these are required form making requestes to github
-            String params = "?client_id=" + client_id + "&client_secret=" + client_secret + "&code=" + code;
-
-            // url to fetch access token
-            String auth_url = githubAuthUrl + params;
-
-            // for fetching 
-            WebClient.Builder builder = WebClient.builder();
-
-            // github returned this token, this token can be used to get other user details
-            Accesstoken accesstokenResponse = builder.build().get().uri(auth_url).header("Accept", "application/json")
-                    .retrieve().bodyToMono(Accesstoken.class).block();
-
-            // Github_api endpoint to get userdetails
-            String user_url = githubApiUrl + "/user";
-            String access_token = accesstokenResponse.getAccesstoken();
+            String access_token = githubService.getAccesstoken(code).orElse(null) ;
 
             // Return badrequest if code sent is wrong
             if(access_token==null){
                 return  new ResponseEntity<>("Invalid code", HttpStatus.BAD_REQUEST);
             }
 
-            // User response sent by guthub
-            GithubUser userResponse = builder.build().get().uri(user_url).header("Accept", "application/json")
-                    .header("Authorization", "Bearer " + access_token).header("X-GitHub-Api-Version", "2022-11-28")
-                    .retrieve().bodyToMono(GithubUser.class).block();
-            
-            String username=userResponse.getUsername();
+            String username= githubService.getGithubUserName(access_token).orElse(null);
             if (username== null) {
                 return new ResponseEntity<>("Internal server error", HttpStatus.INTERNAL_SERVER_ERROR);
             }

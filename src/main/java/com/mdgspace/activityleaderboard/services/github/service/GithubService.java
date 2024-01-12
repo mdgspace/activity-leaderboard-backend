@@ -1,7 +1,8 @@
 package com.mdgspace.activityleaderboard.services.github.service;
 
-import com.mdgspace.activityleaderboard.payload.github.Commit;
+import java.util.Optional;
 
+import com.mdgspace.activityleaderboard.payload.github.Commit;
 import com.mdgspace.activityleaderboard.payload.github.Issue;
 import com.mdgspace.activityleaderboard.payload.github.PullRequest;
 
@@ -15,5 +16,9 @@ public interface GithubService {
 
 
     public Commit[]  totalCommits(String repolink, String accessToken,Boolean month);
+
+    Optional<String> getAccesstoken(String code);
+
+    Optional<String> getGithubUserName(String access_token);
 
 } 
