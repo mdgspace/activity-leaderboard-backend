@@ -14,5 +14,5 @@ import lombok.NoArgsConstructor;
 @Data
 @Builder
 public class GetUsersOrgs implements Serializable {
-    private Map<String, String> userOrgsAndRoles;
+    private Map<String, Map<String,String>> userOrgs;
 }
