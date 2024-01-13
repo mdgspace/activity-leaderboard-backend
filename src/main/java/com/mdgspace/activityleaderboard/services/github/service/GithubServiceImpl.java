@@ -16,7 +16,6 @@ import com.mdgspace.activityleaderboard.payload.github.GithubUser;
 import com.mdgspace.activityleaderboard.payload.github.Issue;
 import com.mdgspace.activityleaderboard.payload.github.PullRequest;
 import com.mdgspace.activityleaderboard.payload.github.Repository;
-import com.nimbusds.oauth2.sdk.token.AccessToken;
 
 import lombok.extern.slf4j.Slf4j;
 
