@@ -179,6 +179,8 @@ public class UserController {
                }else{
                     orgData.put("role", "member");
                }
+               orgData.put("archeive", String.valueOf(orgRole.getArcheive()));
+               orgData.put("bookmark", String.valueOf(orgRole.getBookmarked()));
                response.put(org.getName(), orgData);
             }
             return ResponseEntity.ok().body(new GetUsersOrgs(response));
