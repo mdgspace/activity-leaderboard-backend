@@ -95,6 +95,7 @@ public class FileController {
             String fileName= fileService.uploadFile(multipartFile);
             FileResponse fileResponse=FileResponse.builder().message("File uploaded successfully. File name =>"+fileName).isSuccessful(true).statusCode(200).build();
             org.setIcon(fileName);
+            orgRepository.save(org);
             return new ResponseEntity<>(fileResponse,HttpStatus.OK);
         }else{
             FileResponse fileResponse= FileResponse.builder().message("Invalid File. File extension or File name is not supported").isSuccessful(false).statusCode(400).build();
