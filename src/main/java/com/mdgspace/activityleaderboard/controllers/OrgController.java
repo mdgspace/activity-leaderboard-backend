@@ -3,6 +3,7 @@ package com.mdgspace.activityleaderboard.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -96,6 +97,7 @@ public class OrgController {
 
     }
 
+    @Transactional
     @DeleteMapping("/delete/{orgName}")
     public ResponseEntity<?> deleteOrg(@PathVariable String orgName, Principal principal ){
         try{
