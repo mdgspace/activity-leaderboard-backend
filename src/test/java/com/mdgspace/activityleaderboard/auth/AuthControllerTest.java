@@ -91,7 +91,7 @@ public class AuthControllerTest {
         
         ArgumentCaptor<Organization> orgCaptor= ArgumentCaptor.forClass(Organization.class);
         verify(orgRepository,times(1)).save(orgCaptor.capture());
-        assertThat(orgCaptor.getValue().getName()).isEqualTo("yp969803/userspace");
+        assertThat(orgCaptor.getValue().getName()).isEqualTo("yp969803-userspace");
         ArgumentCaptor<OrgRole> orgRoleCaptor =  ArgumentCaptor.forClass(OrgRole.class);
         verify(orgRoleRepository,times(1)).save(orgRoleCaptor.capture());
         assertThat(orgRoleCaptor.getValue().getRole()).isEqualTo(EOrgRole.ADMIN);

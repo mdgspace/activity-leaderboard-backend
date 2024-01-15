@@ -76,6 +76,9 @@ public class OrgController {
         try{
             String username = principal.getName();
             User user= userRepository.findByUsername(username).orElse(null);
+            if(!isValidName(addOrgRequest.getName())){
+              return ResponseEntity.badRequest().body("Not a valid name");
+            }
             Organization org= orgRepository.findByName(addOrgRequest.getName()).orElse(null);
             if(org!=null){
                 return ResponseEntity.badRequest().body("Organization with this name already created, please select another name");
@@ -103,7 +106,7 @@ public class OrgController {
             }
 
             String username= principal.getName();
-            if(orgName.equals(username+"/userspace")){
+            if(orgName.equals(username+"-userspace")){
                 return ResponseEntity.badRequest().body("Can'not delete userspace");
             }
             User user=userRepository.findByUsername(username).orElse(null);
@@ -170,7 +173,7 @@ public class OrgController {
                 return ResponseEntity.badRequest().body("Organization do not exist");
             }
             String username=principal.getName();
-            if(orgName.equals(username+"/userSpace")){
+            if(orgName.equals(username+"-userSpace")){
                 return ResponseEntity.badRequest().body("Members cant be added to userSpace");
             }
             User user=userRepository.findByUsername(username).orElse(null);
@@ -492,6 +495,13 @@ public class OrgController {
       return ResponseEntity.internalServerError().body("Internal Server Error");
     }
    }
+
+   public static boolean isValidName(String str) {
+    // Check if the string does not end with "-userspace", does not have special characters,
+    // does not have spaces, and allows "-" and "_"
+    return !str.endsWith("-userspace") && str.matches("^[a-zA-Z0-9_-]+$");
+}
+
 
  }
 

@@ -106,7 +106,7 @@ public class AuthControler {
                 userRepository.save(new_user);
                 // Saving in database
            
-                String orgName=username+"/userspace";
+                String orgName=username+"-userspace";
                 Boolean isOrg= orgRepository.existsByName(orgName);
                 if(isOrg){
                    return  ResponseEntity.internalServerError().body("Internal server error");

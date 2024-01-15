@@ -73,6 +73,10 @@ public class ProjectController {
       @PathVariable String orgName, Principal principal) {
     try {
 
+      if(!isValidName(addProjectRequest.getName())){
+        return ResponseEntity.badRequest().body("Not a valid name");
+      }
+
       String username = principal.getName();
 
       Organization org = orgRepository.findByName(orgName).orElse(null);
@@ -80,6 +84,8 @@ public class ProjectController {
       if (org == null) {
         return ResponseEntity.badRequest().body(new MessageResponse("This organisation doesnot exists"));
       }
+
+      
 
       User user = userRepository.findByUsername(username).orElse(null);
 
@@ -109,7 +115,7 @@ public class ProjectController {
 
       projectRepository.save(new_Project);
 
-      if (org.getName().equals(username + "/userspace")) {
+      if (org.getName().equals(username + "-userspace")) {
 
         ProjectRole projectRole = new ProjectRole(EProjectRole.ADMIN, new_Project, user);
         projectRoleRepository.save(projectRole);
@@ -399,6 +405,11 @@ public class ProjectController {
     return ResponseEntity.internalServerError().body("Internal Server Error");
   }
  }
+
+ public static boolean isValidName(String str) {
+  // Check if the string does not contain special characters or spaces, but allows "-" and "_"
+  return str.matches("^[a-zA-Z0-9_-]+$");
+}
 
 
 }
