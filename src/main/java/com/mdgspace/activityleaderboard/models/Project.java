@@ -27,17 +27,17 @@ public class Project implements Serializable{
 
     @Column(name="name")
     @NotBlank
-    @Size(max=10)
+    @Size(max=40)
     private String name;
 
 
     @JsonIgnore
     @NotBlank
-    @Size(max=30)
+    @Size(max=100)
     private String link;
 
     @Column(name = "description")
-    @Size(max=40)
+    @Size(max=200)
     private String description;
 
     @Column(name = "bookmarked")

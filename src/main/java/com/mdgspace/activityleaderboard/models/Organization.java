@@ -35,14 +35,14 @@ public class Organization implements Serializable{
     private Long id;
 
     @NotBlank
-    @Size(max=20)
+    @Size(max=40)
     private String name;
 
-    @Size(max = 40)
+    @Size(max = 200)
     private String description;
 
     @JsonIgnore
-    @Size(max= 30)
+    @Size(max= 60)
     private String icon;
 
     @JsonIgnore
