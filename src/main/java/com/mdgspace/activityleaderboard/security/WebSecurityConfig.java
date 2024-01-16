@@ -62,15 +62,15 @@ public class WebSecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
 
-        
-;        
+      
+        http.cors();
         http.csrf(csrf -> csrf.disable()).exceptionHandling(exception -> exception.authenticationEntryPoint(unauthorizedHandler)).sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)).authorizeHttpRequests(auth -> auth.requestMatchers("/api/auth/**").permitAll().requestMatchers("/api/protected/**").authenticated().anyRequest().permitAll());
         http.authenticationProvider(authenticationProvider());
         http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
-        // http.cors();
+        
         // http.cors().configurationSource(request -> new CorsConfiguration().applyPermitDefaultValues());
-        http.cors((cors) -> cors
-        .configurationSource(apiConfigurationSource()));
+        // http.cors((cors) -> cors
+        // .configurationSource(apiConfigurationSource()));
 
        return http.build();
     }
