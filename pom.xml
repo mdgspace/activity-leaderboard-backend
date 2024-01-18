@@ -22,17 +22,36 @@
 	<properties>
 		<java.version>17</java.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-       <maven.compiler.release>${java.version}</maven.compiler.release>
+		<maven.compiler.release>${java.version}</maven.compiler.release>
 
 	</properties>
 
 	<!-- List of dependencies required by this project -->
 	<dependencies>
+		<dependency>
+			<groupId>com.h2database</groupId>
+			<artifactId>h2</artifactId>
+			<!-- <scope>test</scope>
+			<scope>runtime</scope> -->
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-actuator</artifactId>
+		</dependency>
+
 		<!-- OAuth 2.0 Client for Spring Boot -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-oauth2-client</artifactId>
 		</dependency>
+
+		<dependency>
+			<groupId>com.h2database</groupId>
+			<artifactId>h2</artifactId>
+			<scope>test</scope>
+		</dependency>
+
 
 		<!-- Starter for building web, including RESTful, applications using Spring MVC -->
 		<dependency>

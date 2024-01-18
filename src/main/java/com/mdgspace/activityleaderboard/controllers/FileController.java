@@ -10,6 +10,7 @@ import java.util.Objects;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -95,6 +96,7 @@ public class FileController {
             String fileName= fileService.uploadFile(multipartFile);
             FileResponse fileResponse=FileResponse.builder().message("File uploaded successfully. File name =>"+fileName).isSuccessful(true).statusCode(200).build();
             org.setIcon(fileName);
+            orgRepository.save(org);
             return new ResponseEntity<>(fileResponse,HttpStatus.OK);
         }else{
             FileResponse fileResponse= FileResponse.builder().message("Invalid File. File extension or File name is not supported").isSuccessful(false).statusCode(400).build();
@@ -121,7 +123,11 @@ public class FileController {
           Object response= fileService.downloadFile(fileName);
 
         if(response!=null){
-            return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION,"attachment; filename=\""+fileName+"\"").body(response);
+
+            HttpHeaders headers= new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+            headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\""+fileName+"\"");
+            return ResponseEntity.ok().headers(headers).body(response);
         }
         else {
             FileResponse fileResponse = FileResponse.builder()

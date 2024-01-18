@@ -6,10 +6,13 @@ import java.util.Map;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
+
+@NoArgsConstructor
 @AllArgsConstructor
 @Data
 @Builder
 public class GetUsersOrgs implements Serializable {
-    private Map<String, String> userOrgsAndRoles;
+    private Map<String, Map<String,String>> userOrgs;
 }

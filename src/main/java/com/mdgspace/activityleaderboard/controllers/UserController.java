@@ -102,7 +102,6 @@ public class UserController {
                for (Map.Entry<String, Boolean> e : newStatus.entrySet()) {
                     String org_name = e.getKey();
                     Boolean status = e.getValue();
-                    System.out.println(status+";;;;;;");
                     Organization org=orgRepository.findByName(org_name).orElse(null);
                     if(org==null){
                          continue;
@@ -167,17 +166,22 @@ public class UserController {
                return ResponseEntity.badRequest().body("User with username does not exists");
             }
             List<OrgRole> orgRoles=orgRoleRepository.findByUser(user);
-            Map<String,String> response = new HashMap<>();
+            Map<String,Map<String,String>> response = new HashMap<>();
             for(OrgRole orgRole:orgRoles){
                Organization org=orgRole.getOrganization();
+               Map<String,String> orgData= new HashMap<>();
                if(orgRole.getRole()==EOrgRole.ADMIN){
-                    response.put(org.getName(),"admin");
+                    orgData.put("role", "admin");
+
                }
                else if(orgRole.getRole()==EOrgRole.MANAGER){
-                    response.put(org.getName(), "manager");
+                    orgData.put("role", "manager");
                }else{
-                    response.put(org.getName(), "member");
+                    orgData.put("role", "member");
                }
+               orgData.put("archeive", String.valueOf(orgRole.getArcheive()));
+               orgData.put("bookmark", String.valueOf(orgRole.getBookmarked()));
+               response.put(org.getName(), orgData);
             }
             return ResponseEntity.ok().body(new GetUsersOrgs(response));
           }catch(Exception e){

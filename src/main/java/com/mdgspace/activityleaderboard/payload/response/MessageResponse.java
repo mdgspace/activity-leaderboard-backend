@@ -2,6 +2,10 @@ package com.mdgspace.activityleaderboard.payload.response;
 
 import java.io.Serializable;
 
+import lombok.NoArgsConstructor;
+
+
+@NoArgsConstructor
 // Class to serialize message
 public class MessageResponse implements Serializable{
     

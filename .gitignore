@@ -1,42 +1,59 @@
-*#
-*.iml
-*.ipr
-*.iws
-*.jar
-*.sw?
-*~
-.#*
-.*.md.html
-.DS_Store
-.attach_pid*
+HELP.md
+
+target/
+
+!.mvn/wrapper/maven-wrapper.jar
+
+!**/src/main/**/target/
+
+!**/src/test/**/target/
+
+### STS ###
+
+.apt_generated
+
 .classpath
+
 .factorypath
-.gradle
-.metadata
+
 .project
-.recommenders
+
 .settings
+
 .springBeans
-.vscode
-.env
-env.sh
-/code
-MANIFEST.MF
-_site/
-activemq-data
-bin
-build
-!/**/src/**/bin
-!/**/src/**/build
-build.log
-dependency-reduced-pom.xml
-dump.rdb
-interpolated*.xml
-lib/
-manifest.yml
-out
-overridedb.*
-.flattened-pom.xml
-secrets.yml
-.gradletasknamecache
+
 .sts4-cache
+
+### IntelliJ IDEA ###
+
+.idea
+
+- .iws
+- .iml
+- .ipr
+
+### NetBeans ###
+
+/nbproject/private/
+
+/nbbuild/
+
+/dist/
+
+/nbdist/
+
+/.nb-gradle/
+
+build/
+
+!**/src/main/**/build/
+
+!**/src/test/**/build/
+
+### VS Code ###
+
+.vscode/
+
+# keys
+env.sh
+env.list

@@ -7,7 +7,7 @@ import java.util.HashSet;
 
 import java.util.Set;
 
-
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.mdgspace.activityleaderboard.models.roles.ProjectRole;
 
 import jakarta.persistence.*;
@@ -27,16 +27,17 @@ public class Project implements Serializable{
 
     @Column(name="name")
     @NotBlank
-    @Size(max=10)
+    @Size(max=40)
     private String name;
 
 
+    @JsonIgnore
     @NotBlank
-    @Size(max=30)
+    @Size(max=100)
     private String link;
 
     @Column(name = "description")
-    @Size(max=40)
+    @Size(max=200)
     private String description;
 
     @Column(name = "bookmarked")
@@ -45,10 +46,12 @@ public class Project implements Serializable{
     @Column(name="archeive")
     private Boolean archeive= false;
 
+    
     @ManyToOne(fetch =FetchType.LAZY, optional = false)
     @JoinColumn(name="organization_id",nullable = false)
     private Organization organization;
-
+    
+    @JsonIgnore
     @OneToMany(mappedBy = "project")
     private Set<ProjectRole> projectRoles=new HashSet<>();
 
