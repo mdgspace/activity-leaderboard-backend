@@ -16,9 +16,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
 @Entity
-@Table(name="projects",uniqueConstraints = {
-    @UniqueConstraint(columnNames = "link")
-})
+@Table(name="projects")
 public class Project implements Serializable{
     
     @Id 
