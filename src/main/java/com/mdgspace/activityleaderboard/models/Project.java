@@ -29,7 +29,6 @@ public class Project implements Serializable{
     private String name;
 
 
-    @JsonIgnore
     @NotBlank
     @Size(max=100)
     private String link;
