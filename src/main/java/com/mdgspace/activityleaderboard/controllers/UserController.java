@@ -98,9 +98,9 @@ public class UserController {
           try {
                String username = principal.getName();
                User user = userRepository.findByUsername(username).orElse(null);
-               System.out.println(";;;;;;;;;;;");
+               
                Map<String, Boolean> newStatus = setBookmarkStatusRequest.getBookmarkStatus();
-               System.out.println(newStatus+";;;;;;;;;;;");
+               
                for (Map.Entry<String, Boolean> e : newStatus.entrySet()) {
                     String org_name = e.getKey();
                     Boolean status = e.getValue();

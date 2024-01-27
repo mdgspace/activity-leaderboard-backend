@@ -6,9 +6,11 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.junit.Before;
@@ -27,12 +29,15 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mdgspace.activityleaderboard.ActivityleaderboardApplication;
 import com.mdgspace.activityleaderboard.models.Organization;
 import com.mdgspace.activityleaderboard.models.Project;
 import com.mdgspace.activityleaderboard.models.User;
 import com.mdgspace.activityleaderboard.models.enums.EProjectRole;
 import com.mdgspace.activityleaderboard.models.roles.ProjectRole;
+import com.mdgspace.activityleaderboard.payload.request.SetArcheiveStatusRequest;
+import com.mdgspace.activityleaderboard.payload.request.SetBookmarkStatusRequest;
 import com.mdgspace.activityleaderboard.repository.OrgRepository;
 import com.mdgspace.activityleaderboard.repository.OrgRoleRepository;
 import com.mdgspace.activityleaderboard.repository.ProjectRoleRepository;
@@ -60,6 +65,10 @@ public class UserControllerTest {
 
     @MockBean
     private ProjectRoleRepository projectRoleRepository;
+
+
+    @Autowired
+    private ObjectMapper objectMapper;
 
     private MockMvc mvc;
 
@@ -97,10 +106,33 @@ public class UserControllerTest {
     }
 
 
-    // @WithMockUser("spring")
-    // public void Test_SetBookmark_Stattus() throws Exception{
+    @WithMockUser("spring")
+    @Test
+    public void Test_SetBookmark_Stattus() throws Exception{
 
-    //     User user= new User("spring", "spring", "spring"); 
-    //     when(userRepository.findByUsername(anyString())).thenReturn(Optional.of(user));
-    // }
+        User user= new User("spring", "spring", "spring"); 
+        when(userRepository.findByUsername(anyString())).thenReturn(Optional.of(user));
+        
+        Map<String, Boolean> map = Map.of("test",true);
+
+        SetBookmarkStatusRequest bookStatus= new SetBookmarkStatusRequest(map);
+        mvc.perform(put("/api/protected/user/setBookmarkStatus").contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(bookStatus))).andExpect(status().isOk());
+
+    }
+
+    @WithMockUser("spring")
+    @Test
+    public void Test_SetArchive_Stattus() throws Exception{
+
+        User user= new User("spring", "spring", "spring"); 
+        when(userRepository.findByUsername(anyString())).thenReturn(Optional.of(user));
+        
+        Map<String, Boolean> map = Map.of("test",true);
+
+        SetArcheiveStatusRequest acrReq= new SetArcheiveStatusRequest(map);
+        mvc.perform(put("/api/protected/user/setArcheiveStatus").contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(acrReq))).andExpect(status().isOk());
+
+    }
+
+
 }
