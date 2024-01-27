@@ -49,8 +49,6 @@ public class UserControllerTest {
     }
 
 
-
-    
     @WithMockUser(value="spring")
     @Test
     public void givenAuthRequestOnPrivateService_shouldSucceedWith200() throws Exception{
