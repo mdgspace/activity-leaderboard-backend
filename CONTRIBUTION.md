@@ -63,7 +63,7 @@ docker compose up -d
 #### Run localstack s3 image
 
 ```
-docker run -d --name localstac --network activity-leaderboard-backend_network -e SERVICES=s3 -p 4566:4566 localstack/localstack
+docker run -d --name localstacK --network activity-leaderboard-backend_network -e SERVICES=s3 -p 4566:4566 localstack/localstack
 ```
 #### Create s3 bucket
 
@@ -72,7 +72,7 @@ docker run -d --name localstac --network activity-leaderboard-backend_network -e
 aws --endpoint-url=http://localhost:4566 s3api create-bucket --bucket bucketname --region us-east-1
 
 
-aws s3 ls
+aws  --endpoint-url=http://localhost:4566 s3 ls
 
 ```
 
