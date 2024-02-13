@@ -63,7 +63,7 @@ docker compose up -d
 #### Run localstack s3 image
 
 ```
-docker run -d --name localstacK --network activity-leaderboard-backend_network -e SERVICES=s3 -p 4566:4566 localstack/localstack
+docker run -d --name localstack --network activity-leaderboard-backend_network -e SERVICES=s3 -p 4566:4566 localstack/localstack
 ```
 #### Create s3 bucket
 
@@ -76,6 +76,12 @@ aws  --endpoint-url=http://localhost:4566 s3 ls
 
 ```
 
+### Get the ip of locakstack container
+```
+docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' localstack
+```
+
+
 #### Build backend image(in root dierectory)
 ```
 docker build -t activity-backend:latest .
@@ -84,5 +90,5 @@ docker build -t activity-backend:latest .
 
 #### Run backend image
 ```
-docker run --network activity-leaderboard-backend_network -dp 8080:8080 --env-file env.list activity-backend:latest
+docker run --name backend --network activity-leaderboard-backend_network -dp 8080:8080 --env-file env.list activity-backend:latest
 ```
