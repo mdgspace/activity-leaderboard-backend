@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -66,6 +67,7 @@ public class FileController {
         this.fileService=fileUploadService;
     }
 
+    @Transactional
     @PostMapping("/upload/{orgName}")
     public ResponseEntity<?> uploadFile(@RequestParam("file") MultipartFile multipartFile,@PathVariable String orgName ,Principal principal) throws FileEmptyException, FileUploadException, IOException{
 
