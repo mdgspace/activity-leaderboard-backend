@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -68,6 +69,8 @@ public class ProjectController {
   @Autowired
   GithubService githubService;
 
+
+  @Transactional
   @PostMapping("/add/{orgName}")
   public ResponseEntity<?> addProject(@Valid @RequestBody AddProjectRequest addProjectRequest,
       @PathVariable String orgName, Principal principal) {
@@ -130,6 +133,7 @@ public class ProjectController {
     }
   }
 
+  @Transactional
   @DeleteMapping("/delete/{projectName}/{orgName}")
   public ResponseEntity<?> deleteProject(@PathVariable String projectName, @PathVariable String orgName,
       Principal principal) {
@@ -161,6 +165,7 @@ public class ProjectController {
     }
   }
 
+  @Transactional
   @PutMapping("/update/{projectName}/{orgName}")
   public ResponseEntity<?> updateProject(@Valid @RequestBody AddProjectRequest updateProjectRequest,
       @PathVariable String projectName, @PathVariable String orgName, Principal principal) {
@@ -196,6 +201,7 @@ public class ProjectController {
     }
   }
 
+  @Transactional
   @PostMapping("/addMembers/{projectName}/{orgName}")
   public ResponseEntity<?> addMembers(@Valid @RequestBody AddMembersRequest addMembersRequest,
       @PathVariable String projectName, @PathVariable String orgName, Principal principal) {
@@ -250,6 +256,7 @@ public class ProjectController {
     }
   }
 
+  @Transactional
   @DeleteMapping("/removeMembers/{projectName}/{orgName}")
   public ResponseEntity<?> removeMembers(@Valid @RequestBody AddMembersRequest removMembersRequest, @PathVariable String projectName,@PathVariable String orgName, Principal principal){
     try{
@@ -303,6 +310,7 @@ public class ProjectController {
   }
 
 
+  @Transactional
   @PutMapping("/changeStatus/{projectName}/{orgName}")
   public ResponseEntity<?> changeStatus(@Valid @RequestBody ChangeProjectMembersStatusRequest changeProjectMembersStatusRequest, @PathVariable String projectName, @PathVariable String orgName,Principal principal){
      try{

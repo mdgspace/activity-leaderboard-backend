@@ -57,3 +57,7 @@ build/
 # keys
 env.sh
 env.list
+
+postgres
+files
+

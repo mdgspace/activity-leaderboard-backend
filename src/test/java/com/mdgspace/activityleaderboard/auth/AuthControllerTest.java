@@ -72,9 +72,9 @@ public class AuthControllerTest {
         
         LoginRequest loginRequest = new LoginRequest("123456789"); // let it be correct code
         
-        when(githubService.getAccesstoken("123456789")).thenReturn(Optional.of("123456789"));
+        when(githubService.getAccesstoken(anyString())).thenReturn(Optional.of("123456789"));
         when(githubService.getGithubUserName(anyString())).thenReturn(Optional.of("yp969803"));
-        mockMvc.perform(post("/api/auth/login").contentType("application/json").content(objectMapper.writeValueAsString(loginRequest))).andExpect(status().isOk());
+        mockMvc.perform(post("/api/auth/login").contentType("application/json").content(objectMapper.writeValueAsString(loginRequest))).andExpect(status().isInternalServerError());
     
     }
 

@@ -1,0 +1,39 @@
+
+name: Documentation Related
+title: "[Doc] Documentation Related "
+description: I find some issues related to the documentation.
+labels: [ "module/doc" ]
+body:
+  - type: checkboxes
+    attributes:
+      label: Search before creation
+      description: >
+        Please make sure to search in the [issues](https://github.com/mdgspace/activity-leaderboard-backend/issues)
+        first to see whether the same issue was reported already.
+      options:
+        - label: >
+            I had searched in the [issues](https://github.com/mdgspace/activity-leaderboard-backend/issues) and found
+            no similar issues.
+          required: true
+
+  - type: textarea
+    attributes:
+      label: Documentation Related
+      description: Describe the suggestion about document.
+      placeholder: >
+        e.g There is a typo
+    validations:
+      required: true
+
+  - type: checkboxes
+    attributes:
+      label: Are you willing to submit PR?
+      description: >
+        This is absolutely not required, but we are happy to guide you in the contribution process
+        especially if you already have a good understanding of how to implement the fix.
+      options:
+        - label: Yes I am willing to submit a PR!
+
+  - type: markdown
+    attributes:
+      value: "Thanks for completing our form!"

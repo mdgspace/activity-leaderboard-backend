@@ -71,7 +71,7 @@ public class OrgController {
     @Autowired
     OrgRepository orgRepository;
 
-
+    @Transactional
     @PostMapping("/add")
     public ResponseEntity<?> addOrg(@Valid @RequestBody AddOrgRequest addOrgRequest, Principal principal){
         try{
@@ -136,7 +136,7 @@ public class OrgController {
         }
     }
 
-
+    @Transactional
     @PutMapping("/update/{orgName}")
     public ResponseEntity<?> updateOrg(@Valid @RequestBody AddOrgRequest updateOrgRequest,@PathVariable String orgName, Principal principal){
        try{
@@ -165,6 +165,7 @@ public class OrgController {
        }
     }
 
+    @Transactional
     @PostMapping("/addMembers/{orgName}")
     public ResponseEntity<?> addMembers(@Valid @RequestBody AddMembersRequest addMembersRequest, @PathVariable String orgName,Principal principal){
         try{
@@ -211,6 +212,7 @@ public class OrgController {
         }
     }
 
+    @Transactional
     @DeleteMapping("/removeMembers/{orgName}")
     public ResponseEntity<?> removeMembers(@Valid @RequestBody AddMembersRequest removeMembersRequest, @PathVariable String orgName, Principal principal){
         try{
@@ -261,6 +263,8 @@ public class OrgController {
           return ResponseEntity.internalServerError().body("Internal server error");
         }
     }
+
+    @Transactional
     @PutMapping("/changeMembersStatus/{orgName}")
     public ResponseEntity<?> changeMembersStatus(@Valid @RequestBody ChangeOrgMembersStatusRequest changeOrgMembersStatusRequest,@PathVariable String orgName, Principal principal){
      try{
@@ -323,6 +327,7 @@ public class OrgController {
      }
     }
 
+   @Transactional
    @PutMapping("/setArcheiveStatus/{orgName}")
    public ResponseEntity<?> setArcheiveStatus(@Valid @RequestBody SetArcheiveStatusRequest setArcheiveStatusRequest,@PathVariable String orgName, Principal principal){
      try{
@@ -365,6 +370,7 @@ public class OrgController {
      }
    }
 
+     @Transactional
      @PutMapping("/setBookmarkStatus/{orgName}")
    public ResponseEntity<?> setBookmarkStatus(@Valid @RequestBody SetBookmarkStatusRequest setBookmarkStatusRequest,@PathVariable String orgName, Principal principal){
      try{
